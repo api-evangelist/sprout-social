@@ -1,0 +1,34 @@
+name: Sprout Social FinOps
+description: Financial operations guidance for managing Sprout Social API costs. API access is included as part of the Advanced and Enterprise subscription plans rather than being billed per-call.
+url: https://sproutsocial.com/pricing/
+
+billing_model:
+  type: subscription
+  description: Sprout Social uses a per-seat subscription model. API access is included starting with the Advanced plan at $399/seat/month (billed annually). There are no separate per-API-call fees.
+
+cost_factors:
+  - name: Seat Count
+    description: Cost scales linearly with the number of seats (users) on the account. Each seat on the Advanced plan is $399/month billed annually.
+    impact: high
+
+  - name: Plan Tier
+    description: API access requires the Advanced plan or Enterprise plan. Downgrading to a lower tier removes API access.
+    impact: high
+
+  - name: Monthly Request Volume
+    description: API usage is capped at 250,000 requests/month per customer account. Exceeding this limit may result in throttling. No overage fees are documented publicly; contact your account rep for Enterprise overages.
+    impact: medium
+
+optimization_guidance:
+  - Cache API responses where possible to reduce request volume against the 250,000/month limit.
+  - Use the POST-based analytics endpoints efficiently by batching metric requests rather than making individual calls per profile.
+  - Monitor X-RateLimit-Remaining headers to avoid hitting the 60 requests/minute limit and triggering unnecessary retries.
+  - Evaluate seat count carefully — API access is per-account, not per-seat, so consolidating seats while retaining Advanced plan status can reduce costs.
+  - For high-volume analytics workloads, negotiate Enterprise plan terms with a dedicated account representative.
+
+free_trial:
+  available: true
+  duration: 30 days
+  credit_card_required: false
+  api_access_during_trial: false
+  notes: The 30-day free trial does not include API access. API access requires upgrading to the Advanced or Enterprise plan.

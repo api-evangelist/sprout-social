@@ -1,0 +1,71 @@
+name: Sprout Social Plans and Pricing
+description: Pricing plans for Sprout Social social media management platform. API access is available on the Advanced plan and above.
+url: https://sproutsocial.com/pricing/
+plans:
+  - name: Essentials
+    price: 79
+    unit: seat/month
+    billing: annual
+    price_monthly: 99
+    description: Entry-level plan for individuals and small teams managing social media.
+    features:
+      - 5 social profiles
+      - Publishing and scheduling
+      - Optimal send times
+      - Profile-level reporting
+      - Post-level reporting
+    api_access: false
+
+  - name: Standard
+    price: 199
+    unit: seat/month
+    billing: annual
+    description: For teams that need collaboration and monitoring capabilities.
+    features:
+      - 5 social profiles
+      - Consolidated smart inbox
+      - Collaboration tools
+      - Keyword and location monitoring
+      - Unlimited AI alt text
+      - Review management
+    api_access: false
+
+  - name: Professional
+    price: 299
+    unit: seat/month
+    billing: annual
+    description: Most popular plan for growing teams needing unlimited profiles and competitive insights.
+    features:
+      - Unlimited social profiles
+      - Message tagging
+      - Competitor insights
+      - AI post enhancement
+      - All Standard features
+    api_access: false
+
+  - name: Advanced
+    price: 399
+    unit: seat/month
+    billing: annual
+    description: For enterprises needing API access, advanced analytics, and helpdesk integrations.
+    features:
+      - All Professional features
+      - Sprout Public API access
+      - Helpdesk integrations
+      - Sentiment analysis
+      - Productivity reports
+      - Message spike alerts
+    api_access: true
+
+  - name: Enterprise
+    price: custom
+    unit: seat/month
+    billing: annual
+    description: Custom pricing with white-glove onboarding and dedicated support.
+    features:
+      - All Advanced features
+      - White-glove onboarding
+      - Dedicated SSO support
+      - Priority customer support
+      - Custom contract terms
+    api_access: true

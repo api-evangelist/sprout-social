@@ -1,0 +1,33 @@
+name: Sprout Social API Rate Limits
+description: Rate limits for the Sprout Social Public API. Limits apply per customer account and are enforced to ensure platform stability.
+url: https://api.sproutsocial.com/docs/
+limits:
+  - name: Per-Minute Request Limit
+    rate: 60
+    unit: requests per minute
+    scope: per customer account
+    description: Maximum number of API requests allowed per minute per customer account.
+
+  - name: Monthly Request Limit
+    rate: 250000
+    unit: requests per month
+    scope: per customer account
+    description: Maximum number of API requests allowed per calendar month per customer account.
+
+headers:
+  - name: X-RateLimit-Limit
+    description: The maximum number of requests allowed in the current window.
+  - name: X-RateLimit-Remaining
+    description: The number of requests remaining in the current window.
+  - name: X-RateLimit-Reset
+    description: Unix timestamp when the current rate limit window resets.
+
+retry_guidance:
+  - Use exponential backoff when receiving 429 Too Many Requests responses.
+  - Sprout Social does not publicly document per-plan tier breakdowns for rate limits beyond the general thresholds above.
+  - Contact your Sprout Social account representative for custom rate limit configurations on Enterprise plans.
+
+notes:
+  - Rate limits are enforced per customer account, not per API token.
+  - Detailed per-endpoint rate limit breakdowns are not publicly documented.
+  - Enterprise customers may negotiate higher limits through their account representative.
