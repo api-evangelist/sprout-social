@@ -1,0 +1,217 @@
+vocabulary:
+  name: Sprout Social API Vocabulary
+  description: Key terms, concepts, and data structures used by the Sprout Social Public API
+  url: https://api.sproutsocial.com/docs/
+  version: "1.0.0"
+  updated: "2026-06-13"
+
+concepts:
+
+  - name: customer
+    description: A Sprout Social account holder; identified by a customer ID used in all API paths.
+    example: "GET /v1/{customerId}/metadata/customer"
+
+  - name: customer_profile
+    description: A connected social network profile (e.g. Facebook Page, Instagram Business Account, LinkedIn Company Page) belonging to a customer.
+    fields:
+      - customer_profile_id
+      - network
+      - network_metadata
+
+  - name: group
+    description: A logical grouping of social profiles within a Sprout Social customer account, used to scope analytics and message queries.
+    fields:
+      - group_id
+      - name
+
+  - name: tag
+    description: A label applied to messages for categorization and filtering within a customer account.
+    fields:
+      - tag_id
+      - name
+
+  - name: team
+    description: A collection of Sprout Social users organized for workflow and case assignment purposes.
+    fields:
+      - team_id
+      - name
+
+  - name: queue
+    description: A case queue used to route social care cases to specific teams or users.
+    fields:
+      - queue_id
+      - name
+
+  - name: topic
+    description: A listening topic defining the search criteria for monitoring earned media mentions across social networks.
+    fields:
+      - topic_id
+      - name
+
+  - name: message
+    description: A social media post, comment, mention, or direct message retrieved through the messages endpoint.
+    fields:
+      - message_id
+      - created_time
+      - post_type
+      - tag_id
+      - customer_profile_id
+      - group_id
+      - publishing_post_id
+      - from.guid
+
+  - name: analytics_profile
+    description: Aggregated performance metrics for a social profile, queryable by day.
+    fields:
+      - customer_profile_id
+      - date
+      - metrics
+      - timezone
+
+  - name: analytics_post
+    description: Individual post-level performance data and metrics.
+    fields:
+      - customer_profile_id
+      - post_id
+      - fields
+      - metrics
+
+  - name: listening_message
+    description: An earned media mention captured by a listening topic across monitored social networks.
+    fields:
+      - topic_id
+      - sentiment
+      - network
+      - language
+      - media_type
+      - location
+
+  - name: listening_metric
+    description: Aggregated listening data for a topic, supporting dimensional breakdowns.
+    dimensions:
+      - time_bucket
+      - sentiment
+      - networks
+      - language
+      - media_types
+      - location
+
+  - name: publishing_post
+    description: A draft social media post created through the publishing API, pending scheduling or publishing.
+    fields:
+      - publishing_post_id
+      - group_id
+      - customer_profile_ids
+      - is_draft
+      - text
+      - media
+
+  - name: media
+    description: A media asset (image, video, or document) uploaded to Sprout Social for use in publishing.
+    supported_formats:
+      - PNG
+      - GIF
+      - WebP
+      - JPEG
+      - HEIC
+      - MP4
+      - MOV
+      - WebM
+      - PDF
+    single_file_limit: 50MB
+    multipart_part_limit: 5MB
+
+  - name: case
+    description: A social care case representing a customer inquiry managed through Sprout Social.
+    fields:
+      - case_id
+      - queue_id
+      - type
+      - priority
+      - status
+      - message_id
+      - tag_id
+      - assigned_to
+      - created_by
+      - created_time
+
+networks:
+  - name: Facebook
+    supported_operations:
+      - analytics
+      - messages
+      - publishing
+      - listening
+      - cases
+  - name: Instagram
+    supported_operations:
+      - analytics
+      - messages
+      - publishing
+      - listening
+      - cases
+    notes: Supports lifetime.video_view_time and lifetime.video_view_time_per_view metrics
+  - name: LinkedIn
+    supported_operations:
+      - analytics
+      - messages
+      - publishing
+      - listening
+  - name: TikTok
+    supported_operations:
+      - analytics
+      - messages
+      - publishing
+      - listening
+  - name: YouTube
+    supported_operations:
+      - analytics
+      - messages
+      - listening
+  - name: X (Twitter)
+    supported_operations:
+      - analytics
+      - messages
+      - publishing
+      - listening
+  - name: Pinterest
+    supported_operations:
+      - analytics
+      - messages
+  - name: Threads
+    supported_operations:
+      - analytics
+      - messages
+      - listening
+  - name: Bluesky
+    supported_operations:
+      - listening
+    notes: Added to listening networks December 2025
+
+authentication:
+  - type: OAuth2
+    flows:
+      - machine-to-machine
+      - user-based
+    header: Authorization
+    scheme: Bearer
+  - type: APIToken
+    header: Authorization
+    scheme: Bearer
+
+rate_limits:
+  per_minute: 60
+  per_month: 250000
+
+pagination:
+  default_type: cursor
+  parameter: page_cursor
+  max_per_request: 100
+  additional_parameters:
+    - page
+    - limit
+
+versioning:
+  scheme: MAJOR.MINOR
+  url_format: "/v1/"
+  current_major: 1

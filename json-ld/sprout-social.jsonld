@@ -1,0 +1,151 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "sprout": "https://api.sproutsocial.com/vocab#",
+    "api": "https://api.sproutsocial.com/docs#"
+  },
+  "@type": "WebAPI",
+  "@id": "https://api.sproutsocial.com",
+  "name": "Sprout Social API",
+  "description": "The Sprout Social Public API provides programmatic access to publishing, analytics, messaging, listening, and social care case data across major social networks.",
+  "url": "https://api.sproutsocial.com/docs/",
+  "provider": {
+    "@type": "Organization",
+    "name": "Sprout Social",
+    "url": "https://sproutsocial.com",
+    "sameAs": [
+      "https://github.com/sproutsocial",
+      "https://www.linkedin.com/company/sprout-social-inc-",
+      "https://x.com/SproutSocial"
+    ]
+  },
+  "termsOfService": "https://sproutsocial.com/terms/",
+  "documentation": "https://api.sproutsocial.com/docs/",
+  "version": "1.0.0",
+  "endpointUrl": "https://api.sproutsocial.com",
+  "potentialAction": [
+    {
+      "@type": "Action",
+      "name": "Get Client Metadata",
+      "target": "https://api.sproutsocial.com/v1/metadata/client",
+      "description": "Retrieve customer IDs and names"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Customer Profiles",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/metadata/customer",
+      "description": "List accessible social profiles for a customer"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Message Tags",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/metadata/customer/tags",
+      "description": "Retrieve message tags for a customer"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Groups",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/metadata/customer/groups",
+      "description": "List customer groups"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Users",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/metadata/customer/users",
+      "description": "List active users for a customer"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Listening Topics",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/metadata/customer/topics",
+      "description": "Retrieve listening topics for a customer"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Teams",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/metadata/customer/teams",
+      "description": "List teams for a customer"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Case Queues",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/metadata/customer/queues",
+      "description": "List case queues for a customer"
+    },
+    {
+      "@type": "Action",
+      "name": "Query Profile Analytics",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/analytics/profiles",
+      "description": "Query profile-level metrics by day"
+    },
+    {
+      "@type": "Action",
+      "name": "Query Post Analytics",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/analytics/posts",
+      "description": "Retrieve individual post data and metrics"
+    },
+    {
+      "@type": "Action",
+      "name": "Query Messages",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/messages",
+      "description": "Retrieve message data with metadata and filtering"
+    },
+    {
+      "@type": "Action",
+      "name": "Query Listening Messages",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/listening/topics/{topicId}/messages",
+      "description": "Query topic-specific listening messages"
+    },
+    {
+      "@type": "Action",
+      "name": "Query Listening Metrics",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/listening/topics/{topicId}/metrics",
+      "description": "Aggregate listening topic metrics"
+    },
+    {
+      "@type": "Action",
+      "name": "Create Draft Post",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/publishing/posts",
+      "description": "Create a draft publishing post"
+    },
+    {
+      "@type": "Action",
+      "name": "Get Draft Post",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/publishing/posts/{publishingPostId}",
+      "description": "Retrieve a specific draft post"
+    },
+    {
+      "@type": "Action",
+      "name": "Upload Media",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/media/",
+      "description": "Upload a single media file up to 50MB"
+    },
+    {
+      "@type": "Action",
+      "name": "Initiate Multipart Upload",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/media/submission",
+      "description": "Initiate a multipart media upload"
+    },
+    {
+      "@type": "Action",
+      "name": "Filter Cases",
+      "target": "https://api.sproutsocial.com/v1/{customerId}/cases/filter",
+      "description": "Retrieve social care cases with filtering"
+    }
+  ],
+  "serviceType": "Social Media Management API",
+  "category": [
+    "Social Media",
+    "Social Media Management",
+    "Publishing",
+    "Analytics",
+    "Reporting",
+    "Messaging",
+    "Listening"
+  ],
+  "availableChannel": {
+    "@type": "ServiceChannel",
+    "serviceUrl": "https://api.sproutsocial.com",
+    "serviceType": "REST API"
+  }
+}

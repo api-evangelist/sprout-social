@@ -32,6 +32,10 @@ apis:
         url: https://api.sproutsocial.com/docs/
       - type: Changelog
         url: https://api.sproutsocial.com/docs/changelog/
+      - type: JSONLd
+        url: json-ld/sprout-social.jsonld
+      - type: Vocabulary
+        url: vocabulary/sprout-social-vocabulary.yml
 common:
   - type: Website
     url: https://sproutsocial.com
@@ -55,6 +59,8 @@ common:
     url: rate-limits/sprout-social-rate-limits.yml
   - type: FinOps
     url: finops/sprout-social-finops.yml
+  - type: BlogPosts
+    url: blogs/blogs.json
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
