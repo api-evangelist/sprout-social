@@ -1,66 +1,73 @@
 aid: sprout-social
 name: Sprout Social
-description: Sprout Social is a social media management platform with a REST API for publishing posts, monitoring mentions, managing messages, accessing analytics, and reporting across social networks including Instagram, Facebook, LinkedIn, TikTok, YouTube, and X.
+description: Sprout Social is a social media management platform with a REST API for
+  publishing posts, monitoring mentions, managing messages, accessing analytics, and
+  reporting across social networks including Instagram, Facebook, LinkedIn, TikTok,
+  YouTube, and X.
 image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/sprout-social/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
 specificationVersion: '0.19'
 tags:
+- Social Media
+- Social Media Management
+- Publishing
+- Analytics
+- Reporting
+- Messaging
+- Listening
+apis:
+- aid: sprout-social:sprout-social-api
+  name: Sprout Social API
+  description: The Sprout Social Public API provides programmatic access to publishing,
+    analytics, messaging, listening, and social care case data across major social
+    networks. Requires Advanced plan or higher.
+  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  humanURL: https://api.sproutsocial.com/docs/
+  baseURL: https://api.sproutsocial.com
+  tags:
   - Social Media
-  - Social Media Management
   - Publishing
   - Analytics
-  - Reporting
   - Messaging
   - Listening
-apis:
-  - aid: sprout-social:sprout-social-api
-    name: Sprout Social API
-    description: The Sprout Social Public API provides programmatic access to publishing, analytics, messaging, listening, and social care case data across major social networks. Requires Advanced plan or higher.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
-    humanURL: https://api.sproutsocial.com/docs/
-    baseURL: https://api.sproutsocial.com
-    tags:
-      - Social Media
-      - Publishing
-      - Analytics
-      - Messaging
-      - Listening
-    properties:
-      - type: Documentation
-        url: https://api.sproutsocial.com/docs/
-      - type: Changelog
-        url: https://api.sproutsocial.com/docs/changelog/
-      - type: JSONLd
-        url: json-ld/sprout-social.jsonld
-      - type: Vocabulary
-        url: vocabulary/sprout-social-vocabulary.yml
-common:
-  - type: Website
-    url: https://sproutsocial.com
+  properties:
   - type: Documentation
     url: https://api.sproutsocial.com/docs/
-  - type: GitHubOrg
-    url: https://github.com/sproutsocial
-  - type: LinkedIn
-    url: https://www.linkedin.com/company/sprout-social-inc-
-  - type: Blog
-    url: https://sproutsocial.com/insights/
-  - type: Pricing
-    url: https://sproutsocial.com/pricing/
-  - type: StatusPage
-    url: https://www.sproutsocialstatus.com
-  - type: X
-    url: https://x.com/SproutSocial
-  - type: Plans
-    url: plans/sprout-social-plans-pricing.yml
-  - type: RateLimits
-    url: rate-limits/sprout-social-rate-limits.yml
-  - type: FinOps
-    url: finops/sprout-social-finops.yml
-  - type: BlogPosts
-    url: blogs/blogs.json
+  - type: Changelog
+    url: https://api.sproutsocial.com/docs/changelog/
+  - type: JSONLd
+    url: json-ld/sprout-social.jsonld
+  - type: Vocabulary
+    url: vocabulary/sprout-social-vocabulary.yml
+  - url: graphql/sprout-social-graphql.md
+    type: GraphQL
+common:
+- type: Website
+  url: https://sproutsocial.com
+- type: Documentation
+  url: https://api.sproutsocial.com/docs/
+- type: GitHubOrg
+  url: https://github.com/sproutsocial
+- type: LinkedIn
+  url: https://www.linkedin.com/company/sprout-social-inc-
+- type: Blog
+  url: https://sproutsocial.com/insights/
+- type: Pricing
+  url: https://sproutsocial.com/pricing/
+- type: StatusPage
+  url: https://www.sproutsocialstatus.com
+- type: X
+  url: https://x.com/SproutSocial
+- type: Plans
+  url: plans/sprout-social-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/sprout-social-rate-limits.yml
+- type: FinOps
+  url: finops/sprout-social-finops.yml
+- type: BlogPosts
+  url: blogs/blogs.json
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com

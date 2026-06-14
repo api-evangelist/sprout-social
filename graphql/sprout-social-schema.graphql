@@ -1,0 +1,1032 @@
+"""
+Sprout Social GraphQL Schema
+Conceptual schema derived from the Sprout Social REST API
+https://api.sproutsocial.com/docs/
+"""
+
+# ─── Enumerations ───────────────────────────────────────────────────────────────
+
+enum ProfileNetwork {
+  INSTAGRAM
+  FACEBOOK
+  LINKEDIN
+  TIKTOK
+  YOUTUBE
+  X
+  PINTEREST
+  GOOGLE_BUSINESS
+}
+
+enum AccountType {
+  BUSINESS
+  CREATOR
+  PERSONAL
+  PAGE
+}
+
+enum PostStatus {
+  DRAFT
+  SCHEDULED
+  SENT
+  FAILED
+  CANCELLED
+  NEEDS_APPROVAL
+  APPROVED
+}
+
+enum PostType {
+  TEXT
+  IMAGE
+  VIDEO
+  STORY
+  REEL
+  CAROUSEL
+  LINK
+  POLL
+}
+
+enum MessageType {
+  MENTION
+  COMMENT
+  DIRECT_MESSAGE
+  REVIEW
+  REPLY
+  STORY_MENTION
+}
+
+enum EngagementType {
+  LIKE
+  SHARE
+  COMMENT
+  CLICK
+  SAVE
+  REACTION
+  IMPRESSION
+  REACH
+}
+
+enum SentimentLabel {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
+
+enum ReportFormat {
+  PDF
+  CSV
+  XLSX
+  HTML
+}
+
+enum CalendarViewType {
+  DAY
+  WEEK
+  MONTH
+}
+
+enum WebhookEvent {
+  POST_PUBLISHED
+  POST_FAILED
+  MESSAGE_RECEIVED
+  MESSAGE_ASSIGNED
+  TASK_CREATED
+  TAG_ADDED
+}
+
+# ─── Scalars ────────────────────────────────────────────────────────────────────
+
+scalar DateTime
+scalar URL
+scalar JSON
+
+# ─── Profile and Account Types ──────────────────────────────────────────────────
+
+"""
+A Sprout Social profile representing a connected social media account.
+"""
+type Profile {
+  id: ID!
+  name: String!
+  network: ProfileNetwork!
+  networkId: String!
+  details: ProfileDetails
+  account: SocialAccount
+  metrics: SocialMetrics
+  group: Group
+  tags: [Tag!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Extended metadata for a Sprout Social profile.
+"""
+type ProfileDetails {
+  profileId: ID!
+  bio: String
+  website: URL
+  followerCount: Int
+  followingCount: Int
+  postCount: Int
+  profileImageUrl: URL
+  coverImageUrl: URL
+  isVerified: Boolean
+  networkUserId: String
+  networkUsername: String
+  timezone: String
+}
+
+"""
+A user-facing social account object linking an authenticated platform account to a Sprout profile.
+"""
+type SocialAccount {
+  id: ID!
+  profileId: ID!
+  accountType: AccountType!
+  network: ProfileNetwork!
+  networkAccountId: String!
+  displayName: String!
+  isActive: Boolean!
+  tokenExpiry: DateTime
+  createdAt: DateTime!
+}
+
+"""
+Aggregate metric snapshot for a social account.
+"""
+type SocialMetrics {
+  profileId: ID!
+  followerCount: Int
+  followingCount: Int
+  postCount: Int
+  engagementRate: Float
+  averageLikes: Float
+  averageComments: Float
+  averageShares: Float
+  measuredAt: DateTime!
+}
+
+# ─── Post and Publishing Types ───────────────────────────────────────────────────
+
+"""
+A social media post managed through Sprout Social.
+"""
+type Post {
+  id: ID!
+  profileId: ID!
+  profile: Profile
+  content: String
+  status: PostStatus!
+  type: PostType!
+  details: PostDetails
+  media: PostMedia
+  schedule: PostSchedule
+  audience: PostAudience
+  tags: [Tag!]
+  analytics: PostAnalytics
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Full detail view of a post including network-specific fields and approval state.
+"""
+type PostDetails {
+  postId: ID!
+  networkPostId: String
+  linkUrl: URL
+  linkTitle: String
+  linkDescription: String
+  linkThumbnailUrl: URL
+  approvalStatus: String
+  approvedBy: String
+  approvedAt: DateTime
+  sentAt: DateTime
+  failureReason: String
+  networkResponse: JSON
+}
+
+"""
+Media items attached to a post.
+"""
+type PostMedia {
+  postId: ID!
+  items: [MediaItem!]!
+}
+
+"""
+An individual media asset attached to a post.
+"""
+type MediaItem {
+  id: ID!
+  url: URL!
+  mediaType: String!
+  width: Int
+  height: Int
+  durationSeconds: Float
+  altText: String
+  thumbnailUrl: URL
+  sizeBytes: Int
+}
+
+"""
+Scheduling configuration for a post.
+"""
+type PostSchedule {
+  postId: ID!
+  scheduledSendTime: DateTime
+  timezone: String
+  autoSchedule: Boolean!
+  queuePosition: Int
+}
+
+"""
+Targeting parameters for a post.
+"""
+type PostAudience {
+  postId: ID!
+  locations: [String!]
+  languages: [String!]
+  ageRanges: [String!]
+  genders: [String!]
+  networkTargeting: JSON
+}
+
+"""
+A post in draft state not yet submitted for scheduling or approval.
+"""
+type DraftPost {
+  id: ID!
+  post: Post!
+  lastEditedBy: String
+  lastEditedAt: DateTime!
+}
+
+"""
+A post that has been successfully delivered to the social network.
+"""
+type PublishedPost {
+  id: ID!
+  post: Post!
+  networkPostId: String!
+  publishedAt: DateTime!
+  permalink: URL
+}
+
+"""
+A post queued for future delivery with a confirmed send time.
+"""
+type ScheduledPost {
+  id: ID!
+  post: Post!
+  scheduledSendTime: DateTime!
+  queuePosition: Int
+}
+
+"""
+A post that has been sent, with delivery confirmation and network post ID.
+"""
+type SentPost {
+  id: ID!
+  post: Post!
+  networkPostId: String!
+  sentAt: DateTime!
+  permalink: URL
+}
+
+"""
+A post that failed to deliver, with error code and retry information.
+"""
+type FailedPost {
+  id: ID!
+  post: Post!
+  failureReason: String!
+  errorCode: String
+  canRetry: Boolean!
+  retryCount: Int!
+  lastAttemptAt: DateTime!
+}
+
+# ─── Group and Organization Types ────────────────────────────────────────────────
+
+"""
+A Sprout Social group organizing profiles for team collaboration and reporting.
+"""
+type Group {
+  id: ID!
+  name: String!
+  details: GroupDetails
+  profiles: [GroupProfile!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Extended group information including member profiles and permissions.
+"""
+type GroupDetails {
+  groupId: ID!
+  description: String
+  memberCount: Int!
+  profileCount: Int!
+  timezone: String
+  defaultReportRange: String
+}
+
+"""
+The relationship between a group and a constituent profile.
+"""
+type GroupProfile {
+  groupId: ID!
+  profileId: ID!
+  profile: Profile!
+  addedAt: DateTime!
+}
+
+# ─── Stream and Listening Types ───────────────────────────────────────────────────
+
+"""
+A Sprout Social listening stream monitoring keywords, mentions, hashtags, or accounts.
+"""
+type Stream {
+  id: ID!
+  name: String!
+  details: StreamDetails
+  filter: StreamFilter
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Full stream configuration including filters, volume, and alert thresholds.
+"""
+type StreamDetails {
+  streamId: ID!
+  description: String
+  isActive: Boolean!
+  dailyVolume: Int
+  alertThreshold: Int
+  networks: [ProfileNetwork!]
+}
+
+"""
+Filter criteria applied to a listening stream.
+"""
+type StreamFilter {
+  streamId: ID!
+  keywords: [String!]
+  excludeKeywords: [String!]
+  hashtags: [String!]
+  mentionedAccounts: [String!]
+  languages: [String!]
+  locations: [String!]
+  sentimentFilter: SentimentLabel
+}
+
+"""
+A message surfaced by a listening stream from monitored sources.
+"""
+type FeedMessage {
+  id: ID!
+  streamId: ID!
+  stream: Stream
+  content: String!
+  author: Author
+  network: ProfileNetwork!
+  sentiment: SentimentScore
+  engagements: [Engagement!]
+  permalink: URL
+  publishedAt: DateTime!
+  fetchedAt: DateTime!
+}
+
+# ─── Inbox and Messaging Types ────────────────────────────────────────────────────
+
+"""
+A message appearing in the Sprout Social Smart Inbox.
+"""
+type InboxMessage {
+  id: ID!
+  profileId: ID!
+  profile: Profile
+  messageType: MessageType!
+  content: String!
+  author: Author
+  details: MessageDetails
+  sentiment: SentimentScore
+  tags: [Tag!]
+  assignment: Assignment
+  task: Task
+  attachments: [MessageAttachment!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Full details of an inbox message including author, content, and tasks.
+"""
+type MessageDetails {
+  messageId: ID!
+  networkMessageId: String
+  isRead: Boolean!
+  isHidden: Boolean!
+  isSpam: Boolean!
+  parentMessageId: String
+  permalink: URL
+  networkMetadata: JSON
+}
+
+"""
+A reply composed in Sprout Social sent in response to an inbox message.
+"""
+type ReplyMessage {
+  id: ID!
+  inReplyToId: ID!
+  profileId: ID!
+  content: String!
+  sentBy: String
+  sentAt: DateTime!
+  networkReplyId: String
+  status: String!
+}
+
+"""
+The social media user who authored a message or post.
+"""
+type Author {
+  id: ID!
+  network: ProfileNetwork!
+  networkUserId: String!
+  displayName: String!
+  username: String
+  details: AuthorDetails
+  network_info: AuthorNetwork
+}
+
+"""
+Extended author profile including follower count and bio.
+"""
+type AuthorDetails {
+  authorId: ID!
+  bio: String
+  website: URL
+  followerCount: Int
+  followingCount: Int
+  postCount: Int
+  profileImageUrl: URL
+  isVerified: Boolean
+  location: String
+}
+
+"""
+The social network context for an author profile.
+"""
+type AuthorNetwork {
+  authorId: ID!
+  network: ProfileNetwork!
+  networkUserId: String!
+  networkUsername: String
+  networkProfileUrl: URL
+}
+
+# ─── Engagement Types ─────────────────────────────────────────────────────────────
+
+"""
+An engagement event on a post or message.
+"""
+type Engagement {
+  id: ID!
+  targetId: ID!
+  targetType: String!
+  engagementType: EngagementType!
+  author: Author
+  count: Int
+  occurredAt: DateTime!
+}
+
+"""
+A comment on a published post, with author, content, and reply chain.
+"""
+type Comment {
+  id: ID!
+  postId: ID!
+  networkCommentId: String
+  content: String!
+  author: Author!
+  sentiment: SentimentScore
+  attachments: [MessageAttachment!]
+  replies: [Comment!]
+  likeCount: Int!
+  publishedAt: DateTime!
+}
+
+"""
+A media attachment within a message or comment.
+"""
+type MessageAttachment {
+  id: ID!
+  url: URL!
+  mediaType: String!
+  filename: String
+  sizeBytes: Int
+  thumbnailUrl: URL
+}
+
+# ─── Workflow and Collaboration Types ─────────────────────────────────────────────
+
+"""
+A task assigned to a team member related to a message, post, or contact.
+"""
+type Task {
+  id: ID!
+  title: String!
+  description: String
+  targetId: ID
+  targetType: String
+  assignment: Assignment
+  status: String!
+  dueAt: DateTime
+  createdBy: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+The assignment of a task or message to a specific Sprout Social user.
+"""
+type Assignment {
+  id: ID!
+  targetId: ID!
+  targetType: String!
+  assignedToUserId: ID!
+  assignedByUserId: ID!
+  assignedAt: DateTime!
+  note: String
+}
+
+"""
+An internal note added to a message, profile, or task.
+"""
+type Note {
+  id: ID!
+  targetId: ID!
+  targetType: String!
+  content: String!
+  createdBy: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A label applied to messages, profiles, or posts for categorization.
+"""
+type Tag {
+  id: ID!
+  name: String!
+  details: TagDetails
+  createdAt: DateTime!
+}
+
+"""
+Full tag metadata including color, description, and usage count.
+"""
+type TagDetails {
+  tagId: ID!
+  color: String
+  description: String
+  usageCount: Int!
+  isSystemTag: Boolean!
+  createdBy: String!
+}
+
+# ─── Sentiment and NLP Types ──────────────────────────────────────────────────────
+
+"""
+Machine-learning sentiment classification for a message.
+"""
+type SentimentScore {
+  label: SentimentLabel!
+  confidence: Float!
+  positive: Float
+  neutral: Float
+  negative: Float
+}
+
+# ─── Analytics Types ──────────────────────────────────────────────────────────────
+
+"""
+Top-level analytics container for a date range across profiles and networks.
+"""
+type Analytics {
+  profileId: ID
+  groupId: ID
+  from: DateTime!
+  to: DateTime!
+  profileAnalytics: ProfileAnalytics
+  networkAnalytics: [NetworkAnalytics!]
+  postAnalytics: [PostAnalytics!]
+  engagementAnalytics: EngagementAnalytics
+  sentimentAnalytics: SentimentAnalytics
+}
+
+"""
+Analytics metrics scoped to a single profile.
+"""
+type ProfileAnalytics {
+  profileId: ID!
+  from: DateTime!
+  to: DateTime!
+  followerGrowth: Int
+  impressions: Int
+  reach: Int
+  engagements: Int
+  engagementRate: Float
+  clicks: Int
+  shares: Int
+  comments: Int
+  likes: Int
+  videoViews: Int
+  linkClicks: Int
+}
+
+"""
+Aggregated analytics across all profiles on a given network.
+"""
+type NetworkAnalytics {
+  network: ProfileNetwork!
+  from: DateTime!
+  to: DateTime!
+  profileCount: Int!
+  totalImpressions: Int
+  totalReach: Int
+  totalEngagements: Int
+  averageEngagementRate: Float
+  totalFollowerGrowth: Int
+}
+
+"""
+Performance metrics for an individual post.
+"""
+type PostAnalytics {
+  postId: ID!
+  post: Post
+  impressions: Int
+  reach: Int
+  engagements: Int
+  likes: Int
+  comments: Int
+  shares: Int
+  clicks: Int
+  saves: Int
+  videoViews: Int
+  engagementRate: Float
+  measuredAt: DateTime!
+}
+
+"""
+Breakdown of engagement by type over a time period.
+"""
+type EngagementAnalytics {
+  profileId: ID
+  from: DateTime!
+  to: DateTime!
+  byType: [EngagementBreakdown!]!
+  totalEngagements: Int!
+  peakEngagementDay: String
+  peakEngagementHour: Int
+}
+
+"""
+Engagement count broken down by type.
+"""
+type EngagementBreakdown {
+  engagementType: EngagementType!
+  count: Int!
+  percentageOfTotal: Float!
+}
+
+"""
+Sentiment distribution analytics for inbox messages and listening stream content.
+"""
+type SentimentAnalytics {
+  profileId: ID
+  streamId: ID
+  from: DateTime!
+  to: DateTime!
+  positiveCount: Int!
+  neutralCount: Int!
+  negativeCount: Int!
+  positivePercentage: Float!
+  neutralPercentage: Float!
+  negativePercentage: Float!
+  averageConfidence: Float
+}
+
+# ─── Reporting Types ──────────────────────────────────────────────────────────────
+
+"""
+A Sprout Social report combining analytics across profiles, groups, and date ranges.
+"""
+type Report {
+  id: ID!
+  name: String!
+  details: ReportDetails
+  analytics: Analytics
+  createdBy: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Full report configuration including sections, metrics, date range, and export format.
+"""
+type ReportDetails {
+  reportId: ID!
+  description: String
+  profileIds: [ID!]
+  groupIds: [ID!]
+  from: DateTime!
+  to: DateTime!
+  sections: [String!]!
+  metrics: [String!]!
+  exportFormat: ReportFormat
+  scheduledDelivery: String
+  recipients: [String!]
+}
+
+# ─── Inbox Management Types ───────────────────────────────────────────────────────
+
+"""
+A saved filter configuration for the Smart Inbox.
+"""
+type SmartInboxFilter {
+  id: ID!
+  name: String!
+  profileIds: [ID!]
+  messageTypes: [MessageType!]
+  tagIds: [ID!]
+  assignedToUserId: ID
+  sentimentFilter: SentimentLabel
+  isRead: Boolean
+  isSpam: Boolean
+  createdBy: String!
+  createdAt: DateTime!
+}
+
+# ─── Calendar Types ───────────────────────────────────────────────────────────────
+
+"""
+The content calendar view of scheduled and published posts across profiles.
+"""
+type ContentCalendar {
+  profileIds: [ID!]!
+  groupId: ID
+  from: DateTime!
+  to: DateTime!
+  posts: [Post!]!
+  view: CalendarView
+}
+
+"""
+A specific calendar view configuration with profile and group scope.
+"""
+type CalendarView {
+  viewType: CalendarViewType!
+  profileIds: [ID!]
+  groupId: ID
+  focusDate: DateTime
+  showDrafts: Boolean!
+  showScheduled: Boolean!
+  showPublished: Boolean!
+}
+
+# ─── Credential and Security Types ───────────────────────────────────────────────
+
+"""
+An API key credential used to authenticate requests to the Sprout Social API.
+"""
+type APIKey {
+  id: ID!
+  name: String!
+  keyPrefix: String!
+  scopes: [String!]!
+  isActive: Boolean!
+  lastUsedAt: DateTime
+  expiresAt: DateTime
+  createdBy: String!
+  createdAt: DateTime!
+}
+
+"""
+An OAuth access token for a connected social account or Sprout API session.
+"""
+type Token {
+  id: ID!
+  profileId: ID
+  network: ProfileNetwork
+  tokenType: String!
+  scopes: [String!]!
+  isValid: Boolean!
+  expiresAt: DateTime
+  refreshedAt: DateTime
+  createdAt: DateTime!
+}
+
+"""
+A webhook endpoint configured to receive real-time event notifications.
+"""
+type Webhook {
+  id: ID!
+  url: URL!
+  events: [WebhookEvent!]!
+  isActive: Boolean!
+  secret: String
+  profileIds: [ID!]
+  failureCount: Int!
+  lastDeliveredAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# ─── Input Types ──────────────────────────────────────────────────────────────────
+
+input PostInput {
+  profileId: ID!
+  content: String
+  type: PostType!
+  mediaIds: [ID!]
+  scheduledSendTime: DateTime
+  autoSchedule: Boolean
+  tagIds: [ID!]
+  audience: PostAudienceInput
+  linkUrl: String
+}
+
+input PostAudienceInput {
+  locations: [String!]
+  languages: [String!]
+  ageRanges: [String!]
+  genders: [String!]
+}
+
+input ReplyInput {
+  content: String!
+  mediaIds: [ID!]
+}
+
+input TaskInput {
+  title: String!
+  description: String
+  targetId: ID
+  targetType: String
+  assignedToUserId: ID
+  dueAt: DateTime
+}
+
+input AnalyticsInput {
+  profileId: ID
+  groupId: ID
+  from: DateTime!
+  to: DateTime!
+  metrics: [String!]
+}
+
+# ─── Queries ──────────────────────────────────────────────────────────────────────
+
+type Query {
+  """Fetch a single profile by ID."""
+  profile(id: ID!): Profile
+
+  """List profiles, optionally filtered by group or network."""
+  profiles(groupId: ID, network: ProfileNetwork, limit: Int, offset: Int): [Profile!]!
+
+  """Fetch a single post by ID."""
+  post(id: ID!): Post
+
+  """List posts with filters."""
+  posts(
+    profileId: ID
+    status: PostStatus
+    type: PostType
+    from: DateTime
+    to: DateTime
+    tagId: ID
+    limit: Int
+    offset: Int
+  ): [Post!]!
+
+  """List inbox messages."""
+  inboxMessages(
+    profileId: ID
+    messageType: MessageType
+    isRead: Boolean
+    tagId: ID
+    assignedToUserId: ID
+    sentiment: SentimentLabel
+    limit: Int
+    offset: Int
+  ): [InboxMessage!]!
+
+  """Fetch a single inbox message by ID."""
+  inboxMessage(id: ID!): InboxMessage
+
+  """Fetch a single listening stream by ID."""
+  stream(id: ID!): Stream
+
+  """List all listening streams."""
+  streams: [Stream!]!
+
+  """Fetch feed messages for a stream."""
+  feedMessages(streamId: ID!, from: DateTime, to: DateTime, limit: Int, offset: Int): [FeedMessage!]!
+
+  """Fetch analytics for a profile or group over a date range."""
+  analytics(input: AnalyticsInput!): Analytics
+
+  """List post analytics for a profile."""
+  postAnalytics(profileId: ID!, from: DateTime!, to: DateTime!): [PostAnalytics!]!
+
+  """Fetch a saved report by ID."""
+  report(id: ID!): Report
+
+  """List all saved reports."""
+  reports: [Report!]!
+
+  """List all tags."""
+  tags: [Tag!]!
+
+  """Fetch a tag by ID."""
+  tag(id: ID!): Tag
+
+  """List all groups."""
+  groups: [Group!]!
+
+  """Fetch a group by ID."""
+  group(id: ID!): Group
+
+  """Fetch the content calendar for a date range."""
+  contentCalendar(profileIds: [ID!]!, from: DateTime!, to: DateTime!, view: CalendarViewType): ContentCalendar
+
+  """List API keys."""
+  apiKeys: [APIKey!]!
+
+  """List webhooks."""
+  webhooks: [Webhook!]!
+
+  """List saved Smart Inbox filters."""
+  smartInboxFilters: [SmartInboxFilter!]!
+
+  """List tasks."""
+  tasks(targetId: ID, assignedToUserId: ID, status: String): [Task!]!
+
+  """Fetch a single task by ID."""
+  task(id: ID!): Task
+}
+
+# ─── Mutations ────────────────────────────────────────────────────────────────────
+
+type Mutation {
+  """Create a new post (draft or scheduled)."""
+  createPost(input: PostInput!): Post!
+
+  """Update an existing post."""
+  updatePost(id: ID!, input: PostInput!): Post!
+
+  """Delete a post."""
+  deletePost(id: ID!): Boolean!
+
+  """Send a reply to an inbox message."""
+  sendReply(messageId: ID!, input: ReplyInput!): ReplyMessage!
+
+  """Assign an inbox message to a user."""
+  assignMessage(messageId: ID!, userId: ID!, note: String): Assignment!
+
+  """Mark an inbox message as read."""
+  markMessageRead(messageId: ID!): InboxMessage!
+
+  """Apply a tag to a message or post."""
+  addTag(targetId: ID!, targetType: String!, tagId: ID!): Tag!
+
+  """Remove a tag from a message or post."""
+  removeTag(targetId: ID!, targetType: String!, tagId: ID!): Boolean!
+
+  """Create a workflow task."""
+  createTask(input: TaskInput!): Task!
+
+  """Update a task status."""
+  updateTask(id: ID!, status: String, assignedToUserId: ID): Task!
+
+  """Add an internal note to a target entity."""
+  addNote(targetId: ID!, targetType: String!, content: String!): Note!
+
+  """Create a tag."""
+  createTag(name: String!, color: String, description: String): Tag!
+
+  """Delete a tag."""
+  deleteTag(id: ID!): Boolean!
+
+  """Create a webhook."""
+  createWebhook(url: URL!, events: [WebhookEvent!]!, profileIds: [ID!], secret: String): Webhook!
+
+  """Delete a webhook."""
+  deleteWebhook(id: ID!): Boolean!
+}
