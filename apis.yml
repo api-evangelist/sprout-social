@@ -4,7 +4,7 @@ description: Sprout Social is a social media management platform with a REST API
   publishing posts, monitoring mentions, managing messages, accessing analytics, and
   reporting across social networks including Instagram, Facebook, LinkedIn, TikTok,
   YouTube, and X.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/sprout-social/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
@@ -23,7 +23,7 @@ apis:
   description: The Sprout Social Public API provides programmatic access to publishing,
     analytics, messaging, listening, and social care case data across major social
     networks. Requires Advanced plan or higher.
-  image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://api.sproutsocial.com/docs/
   baseURL: https://api.sproutsocial.com
   tags:
