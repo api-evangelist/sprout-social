@@ -35,9 +35,9 @@ apis:
   properties:
   - type: Documentation
     url: https://api.sproutsocial.com/docs/
-  - type: Changelog
+  - type: ChangeLog
     url: https://api.sproutsocial.com/docs/changelog/
-  - type: JSONLd
+  - type: JSONLD
     url: json-ld/sprout-social.jsonld
   - type: Vocabulary
     url: vocabulary/sprout-social-vocabulary.yml
