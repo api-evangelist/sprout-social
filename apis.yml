@@ -44,6 +44,10 @@ apis:
   - url: graphql/sprout-social-graphql.md
     type: GraphQL
 common:
+- type: TrustCenter
+  url: security/sprout-social-trust-center.yml
+- type: DomainSecurity
+  url: security/sprout-social-domain-security.yml
 - type: Website
   url: https://sproutsocial.com
 - type: Documentation
