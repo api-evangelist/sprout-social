@@ -19,7 +19,7 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/sprout-social.png
 url: https://raw.githubusercontent.com/api-evangelist/sprout-social/refs/heads/main/apis.yml
 created: '2026-06-13'
-modified: '2026-06-13'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 tags:
 - Social Media
@@ -47,14 +47,26 @@ apis:
   properties:
   - type: Documentation
     url: https://api.sproutsocial.com/docs/
+  - type: APIReference
+    url: https://api.sproutsocial.com/docs/
   - type: ChangeLog
     url: https://api.sproutsocial.com/docs/changelog/
   - type: JSONLD
     url: json-ld/sprout-social.jsonld
   - type: Vocabulary
     url: vocabulary/sprout-social-vocabulary.yml
-  - url: graphql/sprout-social-graphql.md
-    type: GraphQL
+  - type: Authentication
+    url: authentication/sprout-social-authentication.yml
+  - type: OAuthScopes
+    url: scopes/sprout-social-scopes.yml
+  - type: Conventions
+    url: conventions/sprout-social-conventions.yml
+  - type: ErrorCatalog
+    url: errors/sprout-social-problem-types.yml
+  - type: DataModel
+    url: data-model/sprout-social-data-model.yml
+  - type: Lifecycle
+    url: lifecycle/sprout-social-lifecycle.yml
 common:
 - type: TrustCenter
   url: security/sprout-social-trust-center.yml
@@ -84,6 +96,56 @@ common:
   url: finops/sprout-social-finops.yml
 - type: BlogPosts
   url: blogs/blogs.json
+- type: DeveloperPortal
+  url: https://api.sproutsocial.com/docs/
+- type: APIReference
+  url: https://api.sproutsocial.com/docs/
+- type: GettingStarted
+  url: https://api.sproutsocial.com/docs/#getting-started
+- type: Support
+  url: https://support.sproutsocial.com/hc/en-us
+- type: SignUp
+  url: https://sproutsocial.com/signup/
+- type: TermsOfService
+  url: https://sproutsocial.com/legal/api-terms-of-service/
+- type: PrivacyPolicy
+  url: https://sproutsocial.com/legal/privacy-policy/
+- type: Security
+  url: https://sproutsocial.com/responsible-disclosure-policy/
+- type: VulnerabilityDisclosure
+  url: security/sprout-social-vulnerability-disclosure.yml
+- type: Compliance
+  url: https://trust.sproutsocial.com/
+- type: Authentication
+  url: authentication/sprout-social-authentication.yml
+- type: OAuthScopes
+  url: scopes/sprout-social-scopes.yml
+- type: WellKnown
+  url: well-known/sprout-social-well-known.yml
+- type: Conventions
+  url: conventions/sprout-social-conventions.yml
+- type: ErrorCatalog
+  url: errors/sprout-social-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/sprout-social-lifecycle.yml
+- type: ChangeLog
+  url: changelog/sprout-social-changelog.yml
+- type: Conformance
+  url: conformance/sprout-social-conformance.yml
+- type: DataModel
+  url: data-model/sprout-social-data-model.yml
+- type: Packages
+  url: packages/sprout-social-packages.yml
+- type: Components
+  url: components/sprout-social-components.yml
+- type: LLMsTxt
+  url: llms/sprout-social-llms.txt
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 14
+  pass: local-v1
+
