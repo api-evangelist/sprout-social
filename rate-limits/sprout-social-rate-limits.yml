@@ -1,33 +1,75 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sproutsocial.com/docs/
 name: Sprout Social API Rate Limits
-description: Rate limits for the Sprout Social Public API. Limits apply per customer account and are enforced to ensure platform stability.
+description: >-
+  Rate limits for the Sprout Social Public API, transcribed from the "Rate Limits"
+  section of the provider's documentation. Limits are stated as flat account-wide
+  ceilings with no per-plan or per-endpoint breakdown.
 url: https://api.sproutsocial.com/docs/
+
 limits:
-  - name: Per-Minute Request Limit
-    rate: 60
-    unit: requests per minute
-    scope: per customer account
-    description: Maximum number of API requests allowed per minute per customer account.
+- name: Per-Minute Request Limit
+  rate: 60
+  unit: requests per minute
+  window: 1 minute
+  scope: per customer account
+  description: >-
+    Published verbatim as "60 requests per minute". No burst allowance is documented.
+- name: Monthly Request Limit
+  rate: 250000
+  unit: requests per month
+  window: 1 month
+  scope: per customer account
+  description: >-
+    Published verbatim as "250,000 requests per month". The documentation does not state
+    whether the month is calendar or rolling.
 
-  - name: Monthly Request Limit
-    rate: 250000
-    unit: requests per month
-    scope: per customer account
-    description: Maximum number of API requests allowed per calendar month per customer account.
+limit_count: 2
 
-headers:
-  - name: X-RateLimit-Limit
-    description: The maximum number of requests allowed in the current window.
-  - name: X-RateLimit-Remaining
-    description: The number of requests remaining in the current window.
-  - name: X-RateLimit-Reset
-    description: Unix timestamp when the current rate limit window resets.
+headers: []
+headers_documented: false
+retry_after: false
 
-retry_guidance:
-  - Use exponential backoff when receiving 429 Too Many Requests responses.
-  - Sprout Social does not publicly document per-plan tier breakdowns for rate limits beyond the general thresholds above.
-  - Contact your Sprout Social account representative for custom rate limit configurations on Enterprise plans.
+exhaustion:
+  status: 429
+  title: Too Many Requests
+  documented_meaning: >-
+    The client is making requests too quickly, or has exhausted the allowed requests in
+    a month.
+  documented_remediation: Slow down your requests.
+
+documented_response_headers:
+- name: X-Sprout-Request-ID
+  description: >-
+    Randomly generated UUID to trace a client request and response. Returned for
+    debugging.
+- name: X-Sprout-API-Version
+  description: Major and minor version of the response.
+- name: X-Sprout-Server-Version
+  description: Server version including major, minor and build number.
 
 notes:
-  - Rate limits are enforced per customer account, not per API token.
-  - Detailed per-endpoint rate limit breakdowns are not publicly documented.
-  - Enterprise customers may negotiate higher limits through their account representative.
+- >-
+  Sprout Social documents NO rate-limit response headers. The provider's Response
+  Headers table lists exactly three headers, all X-Sprout-* and none rate-limit related;
+  no RateLimit-*, X-RateLimit-* or Retry-After header appears anywhere in the reference.
+  A client cannot read remaining budget, reset time, or when it is safe to retry — it
+  can only observe a 429 after the fact. This is the largest runtime-semantics gap in
+  the API.
+- Limits are enforced per customer account, not per API token, so every integration and
+  every token on an account competes for the same 60 requests per minute.
+- No per-endpoint or per-plan rate limit breakdown is published.
+- The two published ceilings are consistent with each other only loosely — 60 rpm
+  sustained would be about 2.6 million requests a month, so the monthly ceiling of
+  250,000 is the binding constraint for any continuous workload.
+
+corrections:
+- date: '2026-08-13'
+  change: >-
+    Removed three previously recorded rate-limit response headers (X-RateLimit-Limit,
+    X-RateLimit-Remaining, X-RateLimit-Reset) and a retry_guidance block. None of them
+    appears in the Sprout Social documentation; the string "X-RateLimit" and the string
+    "Retry-After" both return zero matches against the rendered reference at
+    api.sproutsocial.com/docs/. They credited the provider with a runtime rate-limit
+    signal it does not publish. Added method/source provenance at the same time.

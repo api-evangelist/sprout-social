@@ -1,0 +1,214 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sproutsocial.com/docs/changelog/
+name: Sprout Social API changelog
+description: >-
+  Dated change entries for the Sprout Social Public API, transcribed from the provider's
+  published changelog. The changelog is Sprout's only deprecation notice channel — there
+  is no deprecation policy page and no Deprecation/Sunset response headers — so it is
+  the authoritative record of what was removed and when.
+
+url: https://api.sproutsocial.com/docs/changelog/
+scheme: date-based
+versioned_document: 1.0.0
+current_api_version: v1
+also_in_production: v2
+cadence: irregular, roughly monthly
+window_captured: 2025-01-13 through 2026-06-15
+note: >-
+  Recent window only; the live changelog carries entries back to at least 2024 and is
+  the source of truth.
+
+entries:
+- date: '2026-06-15'
+  breaking: true
+  type: deprecation
+  highlights:
+  - Facebook profile metrics deprecated upstream by Meta and no longer supported —
+    impressions_nonviral_unique, impressions_paid_unique, impressions_viral_unique,
+    post_impressions, post_impressions_nonviral, post_impressions_paid,
+    post_impressions_viral, video_views_unique.
+  - Facebook post metrics deprecated — lifetime.impressions_nonviral_unique,
+    lifetime.impressions_organic_unique, lifetime.impressions_paid_unique,
+    lifetime.impressions_viral_unique, lifetime.video_views_organic_unique,
+    lifetime.video_views_paid_unique, lifetime.video_views_unique.
+
+- date: '2026-06-10'
+  breaking: false
+  type: addition
+  highlights:
+  - Added support for TIKTOK_POST_MENTION and TIKTOK_COMMENT_MENTION post types on the
+    messages endpoint.
+
+- date: '2026-05-12'
+  breaking: false
+  type: documentation
+  highlights:
+  - Documented that no Listening message-level data is available from Reddit following
+    Reddit compliance changes.
+
+- date: '2026-04-15'
+  breaking: false
+  type: addition
+  highlights:
+  - Added publishing_post_id to Message Fields on the messages endpoint, returning the
+    Sprout Publishing Calendar post ID for sent messages published through the Sprout
+    publishing workflow.
+
+- date: '2026-04-08'
+  breaking: false
+  type: addition
+  highlights:
+  - Added lifetime.video_view_time and lifetime.video_view_time_per_view to Instagram
+    post metrics.
+
+- date: '2026-01-13'
+  breaking: false
+  type: addition
+  highlights:
+  - Added network_metadata to the customer profile metadata endpoints
+    (v1/{customerId}/metadata/customer and v2/{customerId}/metadata/customer),
+    carrying network-specific metadata such as address and store_code.
+
+- date: '2025-12-05'
+  breaking: false
+  type: documentation
+  highlights:
+  - Clarified clickthrough_link support — not supported for Instagram, YouTube, Threads
+    or TikTok; LinkedIn limitations clarified.
+
+- date: '2025-12-03'
+  breaking: false
+  type: documentation
+  highlights:
+  - Added notes about the Facebook metric deprecations that occurred on 2025-11-15.
+  - Added Bluesky to the supported Listening networks.
+
+- date: '2025-11-26'
+  breaking: false
+  type: addition
+  highlights:
+  - Documented the from.guid filtering option on the messages endpoint.
+
+- date: '2025-09-15'
+  breaking: false
+  type: addition
+  highlights:
+  - Added lifetime.post_shares_count for Threads, Facebook, LinkedIn, Instagram,
+    YouTube and TikTok.
+
+- date: '2025-09-03'
+  breaking: false
+  type: addition
+  highlights:
+  - LinkedIn personal profiles and posts are now supported on the Analytics endpoints.
+
+- date: '2025-08-29'
+  breaking: false
+  type: addition
+  highlights:
+  - Added TikTok to the supported Listening networks.
+
+- date: '2025-08-11'
+  breaking: false
+  type: addition
+  highlights:
+  - Documented Bluesky posts and post metrics.
+
+- date: '2025-08-05'
+  breaking: false
+  type: addition
+  highlights:
+  - Added the name field to customer metadata returned by GET /v1/metadata/client.
+
+- date: '2025-07-23'
+  breaking: false
+  type: addition
+  highlights:
+  - Added the email field to user metadata returned by the customer users metadata
+    endpoint.
+  - Documented the language_code field on the messages endpoint.
+
+- date: '2025-07-21'
+  breaking: false
+  type: addition
+  highlights:
+  - Documented the document.theme_ids filter for topic messages.
+
+- date: '2025-07-14'
+  breaking: false
+  type: addition
+  highlights:
+  - Documented the is_boosted field on posts.
+
+- date: '2025-06-23'
+  breaking: true
+  type: deprecation
+  highlights:
+  - Removed references to Facebook Groups, which are deprecated upstream.
+
+- date: '2025-06-04'
+  breaking: false
+  type: documentation
+  highlights:
+  - Updated Public API access documentation covering API token management, OAuth token
+    generation and the EULA acceptance flow.
+
+- date: '2025-05-30'
+  breaking: false
+  type: documentation
+  highlights:
+  - Documented availability requirements for Public API metrics.
+
+- date: '2025-05-02'
+  breaking: false
+  type: addition
+  highlights:
+  - Facebook and Instagram profile metrics now include paid, organic and total
+    impressions.
+
+- date: '2025-04-21'
+  breaking: false
+  type: addition
+  highlights:
+  - Added lifetime.views for Instagram posts and views for Instagram profiles.
+
+- date: '2025-03-14'
+  breaking: false
+  type: documentation
+  highlights:
+  - Added a note on the limitation of delivery_state for Publishing posts.
+
+- date: '2025-02-19'
+  breaking: false
+  type: addition
+  highlights:
+  - Added case_id to Message Fields for most message types.
+  - Added search by message ID on the messages endpoint.
+
+- date: '2025-02-03'
+  breaking: false
+  type: addition
+  highlights:
+  - Added Threads profile metrics — lifetime_snapshot.followers_by_age_gender,
+    lifetime_snapshot.followers_by_city, lifetime_snapshot.followers_by_country, likes,
+    profile_views, quotes_count, comments_count, reposts_count, shares_count.
+
+- date: '2025-01-24'
+  breaking: true
+  type: deprecation
+  highlights:
+  - Instagram profile metrics deprecated and no longer available — email_contacts,
+    get_directions_clicks, text_message_clicks, website_clicks, phone_call_clicks,
+    profile_views_unique, profile_actions.
+
+summary:
+  entries_captured: 26
+  breaking_entries: 3
+  deprecation_entries: 3
+  most_recent: '2026-06-15'
+  pattern: >-
+    Additions are overwhelmingly new network metrics and message fields tracking
+    upstream social-network capability; every breaking entry in the captured window is a
+    metric removal forced by an upstream network deprecation rather than a Sprout design
+    change.

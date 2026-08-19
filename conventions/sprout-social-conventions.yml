@@ -1,0 +1,216 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sproutsocial.com/docs/
+name: Sprout Social API conventions
+description: >-
+  Cross-cutting request/response semantics for the Sprout Social Public API, read from
+  the provider's own documentation. Sprout publishes no OpenAPI, so every field below
+  is quoted from or directly grounded in the reference at api.sproutsocial.com/docs/.
+
+base_url: https://api.sproutsocial.com
+
+url_structure:
+  pattern: /<version>/<customer ID>/<endpoint path>
+  note: >-
+    Every endpoint except GET /v1/metadata/client is scoped to a customer ID in the
+    path. The customer ID is obtained first from GET /v1/metadata/client, which is the
+    mandatory bootstrap call for any integration.
+  bootstrap_operation: GET /v1/metadata/client
+
+authentication:
+  style: bearer
+  header: 'Authorization: Bearer <OAuth access token OR API token>'
+  credential_types:
+  - account-scoped API token
+  - OAuth 2.0 JWT access token
+  detail: authentication/sprout-social-authentication.yml
+
+content_negotiation:
+  request_content_type: application/json
+  response_content_type: application/json
+  accept: application/json
+  note: >-
+    Submitting a non-JSON body or requesting a non-JSON response returns
+    415 Unsupported Media Type.
+
+http_methods:
+  read: GET
+  query: POST
+  note: >-
+    Sprout uses POST for read-only query endpoints (analytics, listening, messages,
+    cases) because filters, metrics, fields and sort are passed as a JSON request body
+    rather than as query parameters. Only the customer-metadata and media-submission
+    status endpoints are GET. This is a notable deviation from REST convention and
+    means most Sprout reads are not cacheable and not safe to retry blindly.
+
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    Sprout Social documents no idempotency key, no request de-duplication window and no
+    idempotent-retry contract. This matters most on POST /v1/<customer ID>/publishing/posts,
+    where a retried create has no published protection against producing a duplicate
+    scheduled post. Retry guidance in the documentation covers only 202, 500, 503 and
+    504 (transport-level retry), not write de-duplication.
+
+pagination:
+  styles:
+  - style: page-index
+    endpoints:
+    - POST /v1/<customer ID>/analytics/profiles
+    - POST /v1/<customer ID>/analytics/posts
+    - POST /v1/<customer ID>/listening/topics/<topic id>/messages
+    request_params:
+    - name: page
+      description: 1-indexed page number to return
+    - name: limit
+      description: Max results per page
+    response_object: paging
+    response_fields:
+    - name: current_page
+      description: 1-indexed page number of this response
+    - name: total_pages
+      description: Total number of pages for the request
+    termination: current_page == total_pages
+    defaults:
+      analytics_profiles_limit: 1000
+      analytics_posts_limit: 50
+      listening_messages_limit: 50
+    note: >-
+      A paging object is always returned, including when all data fits in one page.
+      Requesting a page greater than total_pages returns 400 Bad Request.
+  - style: next-token
+    endpoints:
+    - POST /v1/<customer ID>/messages
+    - POST /v1/<customer ID>/cases/filter
+    request_params:
+    - name: page
+      description: >-
+        Opaque next-page value taken from the previous response. Only forward paging is
+        supported; index-based paging is explicitly not supported on these endpoints.
+    response_object: paging
+    termination: no further next page returned
+  - style: none
+    endpoints:
+    - GET /v1/<customer ID>/metadata/customer/tags
+    - POST /v1/<customer ID>/listening/topics/<topic id>/metrics
+    note: These endpoints return the complete result set in a single response.
+  hard_limit:
+    max_results: 10000
+    behavior: >-
+      Results beyond 10,000 are truncated as a performance guardrail. To exceed it,
+      Sprout documents a cursor-emulation pattern — sort by guid:asc, take the last
+      guid of each page, and filter for guids greater than it on the next request.
+
+filtering:
+  style: expression-string
+  location: request body `filters` array
+  grammar: <field>.<operator>(<args>)
+  operators:
+  - eq
+  - in
+  examples:
+  - customer_profile_id.eq(1234, 5678)
+  - reporting_period.in(2018-01-01...2018-02-01)
+  - created_time.in(2018-01-01...2018-02-01)
+
+sparse_fields:
+  supported: true
+  param: fields
+  note: >-
+    On the Posts analytics endpoint, omitting `fields` returns only the `guid` field.
+    Callers must name every field they want.
+
+metrics_selection:
+  supported: true
+  param: metrics
+  note: >-
+    Analytics endpoints require an explicit `metrics` array; available metrics differ
+    per social network and per profile-vs-post scope.
+
+sorting:
+  supported: true
+  param: sort
+  format: <field>:<direction>
+  directions: [asc, desc]
+  scope: Posts analytics endpoint
+
+timezone:
+  param: timezone
+  source: ICANN time zone database
+  note: >-
+    Timezone affects date/time filters only. Post responses are always returned in UTC.
+
+request_tracing:
+  header: X-Sprout-Request-ID
+  description: >-
+    Randomly generated UUID returned on every response to trace a client request and
+    response, intended for debugging and for support escalation.
+  example: bedc387d-9b99-42ae-9887-cc15f9885d47
+  client_supplied: false
+
+response_envelope:
+  shape: object
+  fields:
+  - name: data
+    type: array
+    description: Results of the API request.
+  - name: paging
+    type: object
+    required: false
+    description: State of paging for this response.
+  - name: error
+    type: string
+    required: false
+    description: Error message when there is an issue with the request.
+  problem_json: false
+  note: >-
+    Errors are returned as a plain string on the `error` key of the same envelope. There
+    is no RFC 9457 application/problem+json media type, no machine-readable error code
+    and no error type URI.
+
+versioning:
+  scheme: MAJOR.MINOR
+  in_url: major only
+  current: v1
+  also_referenced: v2
+  response_headers:
+  - name: X-Sprout-API-Version
+    description: Major and minor version of the response
+    example: '1.1'
+  - name: X-Sprout-Server-Version
+    description: >-
+      Server version including major, minor and build number. Major and minor reflect
+      the latest available API version.
+    example: 1.1.3018
+  semantics:
+    major: >-
+      Breaking change to request or response syntax and semantics. Reflected in the URL
+      path.
+    minor: >-
+      Backwards-compatible change such as new metrics, new endpoints or metric updates.
+      Reflected in documentation and in the response header, not in the URL.
+  detail: lifecycle/sprout-social-lifecycle.yml
+
+rate_limit_signaling:
+  documented_limits: true
+  response_headers: []
+  note: >-
+    Sprout publishes hard limits (60 requests/minute, 250,000 requests/month) but
+    documents no rate-limit response headers and no Retry-After. The published Response
+    Headers table lists only X-Sprout-Request-ID, X-Sprout-API-Version and
+    X-Sprout-Server-Version. A client can only discover exhaustion by receiving
+    429 Too Many Requests, and cannot read remaining budget or a reset time.
+  detail: rate-limits/sprout-social-rate-limits.yml
+
+errors:
+  detail: errors/sprout-social-problem-types.yml
+
+cross_references:
+  authentication: authentication/sprout-social-authentication.yml
+  scopes: scopes/sprout-social-scopes.yml
+  errors: errors/sprout-social-problem-types.yml
+  lifecycle: lifecycle/sprout-social-lifecycle.yml
+  rate_limits: rate-limits/sprout-social-rate-limits.yml
+  changelog: changelog/sprout-social-changelog.yml
+  data_model: data-model/sprout-social-data-model.yml

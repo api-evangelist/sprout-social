@@ -1,0 +1,242 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  registry.npmjs.org (search + per-package metadata endpoints), pypi.org,
+  rubygems.org, https://github.com/sproutsocial, https://api.sproutsocial.com/docs/
+name: Sprout Social published packages
+description: >-
+  Sprout Social publishes no first-party client library for its Public API in any
+  language. What it does publish, and publishes actively, is Seeds — its open design
+  system — as ~60 MIT-licensed npm packages under the @sproutsocial scope, plus Racine,
+  its React component library. These are UI packages, not API clients: none of them
+  wraps api.sproutsocial.com. Versions and publish dates below were read from the npm
+  registry metadata endpoint.
+
+api_client_sdks:
+  count: 0
+  note: >-
+    No official Sprout Social API SDK exists on npm, PyPI, RubyGems, Maven Central,
+    NuGet, pkg.go.dev, Packagist or crates.io. pypi.org/pypi/sproutsocial,
+    /sprout-social and /sprout_social all return HTTP 404. The GitHub org
+    (github.com/sproutsocial, 68 public repos) contains forks of third-party OSS
+    (NSQ, ROME, restfb, Twitter4J, swagger-ui) and internal tooling, but no Sprout API
+    client. Integrators are expected to call the REST API directly with an HTTP client.
+    The only published integration convenience is a Tableau Web Data Connector at
+    https://api.sproutsocial.com/tableau/, which is a hosted connector rather than a
+    distributable package.
+
+packages:
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/racine'
+  url: https://www.npmjs.com/package/@sproutsocial/racine
+  install: npm install @sproutsocial/racine
+  official: true
+  api_client: false
+  category: ui-component-library
+  version: 31.7.20
+  published: '2026-08-12'
+  first_published: '2018-03-20'
+  license: MIT
+  description: Sprout Social's React component library.
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-react-theme'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-react-theme
+  install: npm install @sproutsocial/seeds-react-theme
+  official: true
+  api_client: false
+  category: design-system
+  version: 4.5.0
+  published: '2026-08-12'
+  first_published: '2024-03-06'
+  license: MIT
+  description: Seeds theme provider for the React component set.
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-react-data-viz'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-react-data-viz
+  install: npm install @sproutsocial/seeds-react-data-viz
+  official: true
+  api_client: false
+  category: design-system
+  version: 0.25.1
+  published: '2026-08-12'
+  first_published: '2025-01-16'
+  license: MIT
+  description: Seeds React data visualization components.
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-react-data-table'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-react-data-table
+  install: npm install @sproutsocial/seeds-react-data-table
+  official: true
+  api_client: false
+  category: design-system
+  version: 2.6.37
+  published: '2026-08-12'
+  first_published: '2025-10-14'
+  license: MIT
+  description: Seeds React DataTable.
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-icons'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-icons
+  install: npm install @sproutsocial/seeds-icons
+  official: true
+  api_client: false
+  category: design-system
+  version: 2.11.0
+  published: '2026-08-07'
+  first_published: '2022-11-18'
+  license: MIT
+  repository: https://github.com/sproutsocial/seeds-packets
+  description: Seeds icon set.
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-illustrations'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-illustrations
+  install: npm install @sproutsocial/seeds-illustrations
+  official: true
+  api_client: false
+  category: design-system
+  version: 2.4.0
+  published: '2026-07-31'
+  first_published: '2023-11-01'
+  license: MIT
+  repository: https://github.com/sproutsocial/seeds-packets
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-partner-logos'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-partner-logos
+  install: npm install @sproutsocial/seeds-partner-logos
+  official: true
+  api_client: false
+  category: design-system
+  version: 2.4.1
+  published: '2026-06-23'
+  first_published: '2023-11-01'
+  license: MIT
+  repository: https://github.com/sproutsocial/seeds-packets
+  description: Social network partner brand logos.
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-networkcolor'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-networkcolor
+  install: npm install @sproutsocial/seeds-networkcolor
+  official: true
+  api_client: false
+  category: design-system
+  version: 2.22.0
+  published: '2026-02-19'
+  first_published: '2017-03-28'
+  license: MIT
+  repository: https://github.com/sproutsocial/seeds-packets
+  description: Brand color tokens for each supported social network.
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-typography'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-typography
+  install: npm install @sproutsocial/seeds-typography
+  official: true
+  api_client: false
+  category: design-system
+  version: 3.7.1
+  published: '2026-01-28'
+  first_published: '2017-03-16'
+  license: MIT
+  repository: https://github.com/sproutsocial/seeds-packets
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seeds-color'
+  url: https://www.npmjs.com/package/@sproutsocial/seeds-color
+  install: npm install @sproutsocial/seeds-color
+  official: true
+  api_client: false
+  category: design-system
+  version: 2.3.0
+  published: '2026-01-23'
+  first_published: '2017-02-17'
+  license: MIT
+  repository: https://github.com/sproutsocial/seeds-packets
+
+- language: javascript
+  registry: npm
+  name: '@sproutsocial/seedlings'
+  url: https://www.npmjs.com/package/@sproutsocial/seedlings
+  install: npm install @sproutsocial/seedlings
+  official: true
+  api_client: false
+  category: design-system
+  version: 1.28.2
+  published: '2024-03-01'
+  first_published: '2018-12-06'
+  license: MIT
+  repository: https://github.com/sproutsocial/seeds-packets
+  description: Tachyons-like utility classes for Seeds.
+  status: stale
+  note: >-
+    Last published 2024-03-01, more than two years behind the rest of the scope, while
+    sibling Seeds packets ship monthly. Treat as unmaintained relative to the active set.
+
+third_party_packages:
+  note: >-
+    Recorded for completeness. None of these is published by Sprout Social; they are
+    community MCP wrappers around the Sprout API found during the MCP search. They are
+    not official and are not counted above.
+  packages:
+  - registry: npm
+    name: '@oliverames/sprout-mcp-server'
+    version: 1.3.2
+    published: '2026-08-12'
+    official: false
+  - registry: npm
+    name: '@jginorio/sprout-social-mcp'
+    version: 1.0.1
+    published: '2026-05-22'
+    official: false
+    note: Self-described as "Unofficial community MCP server for the Sprout Social API".
+  - registry: npm
+    name: '@kodowjam/sprout-social-mcp'
+    version: 0.1.2
+    published: '2026-04-03'
+    official: false
+  - registry: npm
+    name: sprout-social-mcp
+    version: 1.0.0
+    published: '2025-12-19'
+    official: false
+
+summary:
+  official_package_count: 11
+  official_api_client_count: 0
+  scope: '@sproutsocial'
+  scope_total_published: 60
+  languages: [javascript]
+  registries: [npm]
+  actively_maintained: true
+  note: >-
+    The @sproutsocial npm scope carries roughly 60 published packages, all Seeds design
+    system or Racine. The eleven above are the representative set with registry-read
+    versions; the remainder are per-component Seeds React packages
+    (seeds-react-button, seeds-react-modal, seeds-react-select, and so on) on the same
+    2026-08-12 release train.
+
+gaps:
+- >-
+  No first-party API client library in any language. This is the single largest developer
+  ergonomics gap in the profile — an Advanced-plan customer paying for API access must
+  hand-roll HTTP, auth-token refresh, the expression-string filter grammar and two
+  different pagination styles.
+- No CLI is published.
+- No public Postman collection or workspace was found; api.sproutsocial.com/docs/postman/
+  returns HTTP 404 and the word "Postman" does not appear in the reference.

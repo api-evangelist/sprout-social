@@ -1,0 +1,138 @@
+generated: '2026-08-13'
+method: searched
+source: https://seeds.sproutsocial.com/
+name: Sprout Social Seeds design system
+description: >-
+  Seeds is Sprout Social's public, open-source design system: documented at
+  seeds.sproutsocial.com and distributed as MIT-licensed npm packages under the
+  @sproutsocial scope. It is a client-side UI component and design-token library for
+  building interfaces, not an embedded surface for the Sprout API — none of these
+  components talks to api.sproutsocial.com, and Sprout publishes no embeddable widget,
+  hosted iframe or embedded dashboard for its API product.
+
+docs: https://seeds.sproutsocial.com/
+probed_status: 200
+license: MIT
+repository: https://github.com/sproutsocial/seeds-packets
+distribution: npm
+loader: none
+embedded_api_surface: false
+
+families:
+- family: Design tokens
+  description: >-
+    Platform-agnostic token packets — color, typography, space, border, depth, motion,
+    and per-social-network brand color.
+  packages:
+  - '@sproutsocial/seeds-color'
+  - '@sproutsocial/seeds-typography'
+  - '@sproutsocial/seeds-space'
+  - '@sproutsocial/seeds-border'
+  - '@sproutsocial/seeds-depth'
+  - '@sproutsocial/seeds-motion'
+  - '@sproutsocial/seeds-networkcolor'
+
+- family: Assets
+  description: Icon set, illustration set, and social network partner logos.
+  packages:
+  - '@sproutsocial/seeds-icons'
+  - '@sproutsocial/seeds-illustrations'
+  - '@sproutsocial/seeds-partner-logos'
+
+- family: React primitives
+  description: Layout, typography and system-prop primitives the component set builds on.
+  packages:
+  - '@sproutsocial/seeds-react-box'
+  - '@sproutsocial/seeds-react-text'
+  - '@sproutsocial/seeds-react-stack'
+  - '@sproutsocial/seeds-react-container'
+  - '@sproutsocial/seeds-react-system-props'
+  - '@sproutsocial/seeds-react-mixins'
+  - '@sproutsocial/seeds-react-hooks'
+  - '@sproutsocial/seeds-react-utilities'
+  - '@sproutsocial/seeds-react-theme'
+
+- family: React form controls
+  description: Input, selection and toggle controls.
+  packages:
+  - '@sproutsocial/seeds-react-input'
+  - '@sproutsocial/seeds-react-textarea'
+  - '@sproutsocial/seeds-react-select'
+  - '@sproutsocial/seeds-react-checkbox'
+  - '@sproutsocial/seeds-react-radio'
+  - '@sproutsocial/seeds-react-switch'
+  - '@sproutsocial/seeds-react-fieldset'
+  - '@sproutsocial/seeds-react-label'
+  - '@sproutsocial/seeds-react-datepicker'
+  - '@sproutsocial/seeds-react-button'
+
+- family: React navigation and disclosure
+  description: Menus, tabs, drawers, modals, popouts and accordions.
+  packages:
+  - '@sproutsocial/seeds-react-menu'
+  - '@sproutsocial/seeds-react-tabs'
+  - '@sproutsocial/seeds-react-drawer'
+  - '@sproutsocial/seeds-react-modal'
+  - '@sproutsocial/seeds-react-popout'
+  - '@sproutsocial/seeds-react-accordion'
+  - '@sproutsocial/seeds-react-panel'
+  - '@sproutsocial/seeds-react-breadcrumb'
+  - '@sproutsocial/seeds-react-tree'
+
+- family: React data display
+  description: >-
+    Tables, data tables, pagination, data visualization and the narrative kit — the
+    components behind Sprout's own reporting surfaces.
+  packages:
+  - '@sproutsocial/seeds-react-table'
+  - '@sproutsocial/seeds-react-data-table'
+  - '@sproutsocial/seeds-react-data-viz'
+  - '@sproutsocial/seeds-react-pagination'
+  - '@sproutsocial/seeds-react-narrative-kit'
+  - '@sproutsocial/seeds-react-list'
+  - '@sproutsocial/seeds-react-numeral'
+  - '@sproutsocial/seeds-react-duration'
+
+- family: React feedback and status
+  description: Banners, toasts, messages, tooltips, skeletons and progress indicators.
+  packages:
+  - '@sproutsocial/seeds-react-banner'
+  - '@sproutsocial/seeds-react-toast'
+  - '@sproutsocial/seeds-react-message'
+  - '@sproutsocial/seeds-react-tooltip'
+  - '@sproutsocial/seeds-react-skeleton'
+  - '@sproutsocial/seeds-react-progress'
+
+- family: React media and identity
+  description: Avatars, images, icons, tokens, links and partner logo components.
+  packages:
+  - '@sproutsocial/seeds-react-avatar'
+  - '@sproutsocial/seeds-react-image'
+  - '@sproutsocial/seeds-react-icon'
+  - '@sproutsocial/seeds-react-token'
+  - '@sproutsocial/seeds-react-link'
+  - '@sproutsocial/seeds-react-partner-logo'
+
+- family: Component library
+  description: >-
+    Racine, Sprout's broader React component library, published on the same release
+    train as Seeds.
+  packages:
+  - '@sproutsocial/racine'
+
+summary:
+  family_count: 9
+  published_packages_in_scope: 60
+  hosted_surfaces: 0
+  web_components: false
+  react: true
+  api_bound: false
+
+related:
+  packages: packages/sprout-social-packages.yml
+
+note: >-
+  Recorded because it is a real, actively maintained, publicly consumable first-party
+  component surface — the @sproutsocial scope shipped a release train on 2026-08-12.
+  It is deliberately NOT counted as an API SDK or as an embedded API surface: Seeds
+  renders interfaces, it does not call the Sprout Social Public API.

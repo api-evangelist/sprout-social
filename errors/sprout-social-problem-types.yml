@@ -1,0 +1,117 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sproutsocial.com/docs/
+name: Sprout Social API error catalog
+description: >-
+  HTTP status codes returned by the Sprout Social Public API, transcribed from the
+  "Responses > HTTP Status Codes" table in the provider's documentation. Sprout
+  publishes no OpenAPI, so this catalog is read directly from the docs rather than
+  derived from 4xx/5xx response objects.
+
+format: plain-envelope
+problem_json: false
+envelope:
+  media_type: application/json
+  error_field: error
+  error_type: string
+  description: >-
+    Errors are surfaced as an optional `error` key on the same response envelope that
+    carries `data` and `paging`. The value is a human-readable message string. There is
+    no error code, no error type URI, no field-level detail array and no
+    application/problem+json representation.
+
+problems:
+- status: 200
+  title: OK
+  meaning: Request was processed successfully.
+  remediation: >-
+    None. The result of the request is available in the response body.
+  terminal: true
+- status: 202
+  title: Ready
+  meaning: >-
+    Request was processed successfully but is not ready for a proper answer.
+  remediation: Retry the request. If this code persists, contact support.
+  retryable: true
+- status: 400
+  title: Bad Request
+  meaning: >-
+    The request is malformed and does not conform with the request bodies specified in
+    the documentation.
+  remediation: Update the request body.
+  retryable: false
+  known_causes:
+  - Requesting a page greater than total_pages on a paginated endpoint.
+- status: 401
+  title: Unauthorized
+  meaning: >-
+    The request does not contain a valid access token, or the access token has expired.
+  remediation: Reauthenticate and obtain a fresh token.
+  retryable: false
+  see: authentication/sprout-social-authentication.yml
+- status: 403
+  title: Forbidden
+  meaning: >-
+    The request is accessing customer or profile data that the client is not allowed
+    access to.
+  remediation: Update the request body.
+  retryable: false
+- status: 404
+  title: Not Found
+  meaning: The client is requesting an endpoint that does not exist.
+  remediation: Check your endpoint, and use an existing endpoint.
+  retryable: false
+- status: 405
+  title: Method Not Allowed
+  meaning: The client is using an HTTP verb that is not appropriate.
+  remediation: >-
+    Use the HTTP verb listed for the endpoint being called — typically POST or GET.
+  retryable: false
+- status: 415
+  title: Unsupported Media Type
+  meaning: >-
+    The client submitted a request body that is not JSON, or requested a response that
+    is not JSON.
+  remediation: Correct the Accept and Content-Type headers to use JSON.
+  retryable: false
+- status: 429
+  title: Too Many Requests
+  meaning: >-
+    The client is making requests too quickly, or has exhausted the allowed requests in
+    a month.
+  remediation: Slow down your requests.
+  retryable: true
+  note: >-
+    No Retry-After header and no rate-limit headers are documented, so a client cannot
+    read when it may retry. See rate-limits/sprout-social-rate-limits.yml.
+- status: 500
+  title: Internal Server Error
+  meaning: The server had an issue processing the request.
+  remediation: Retry the request. If this code persists, contact support.
+  retryable: true
+- status: 503
+  title: Service Unavailable
+  meaning: The server is overloaded and cannot process the request.
+  remediation: Retry the request. If this code persists, contact support.
+  retryable: true
+- status: 504
+  title: Gateway Timeout
+  meaning: The server was unable to produce a result in time.
+  remediation: >-
+    Retry the request. If this code persists, contact support or decrease the scope of
+    the request — smaller date ranges, fewer profiles.
+  retryable: true
+
+summary:
+  problem_count: 12
+  retryable_statuses: [202, 429, 500, 503, 504]
+  rfc9457: false
+  error_codes_published: false
+
+gaps:
+- No stable machine-readable error code or error identifier is published — only an HTTP
+  status and a free-text message. An agent cannot branch on error identity, only on
+  status class.
+- No documented error taxonomy for partial failures on the publishing or media-upload
+  endpoints.
+- No RFC 9457 problem+json representation.

@@ -1,0 +1,86 @@
+generated: '2026-08-13'
+method: probed
+source: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/.well-known/oauth-authorization-server
+docs: https://api.sproutsocial.com/docs/
+name: Sprout Social OAuth 2.0 scopes
+description: >-
+  Sprout Social publishes no scope reference page in its API documentation. The scope
+  list below was read from the live RFC 8414 authorization server metadata document
+  that the documentation names by URL (saved verbatim at
+  well-known/sprout-social-oauth-authorization-server.json), which is the provider's
+  own authoritative statement of scopes_supported. Scopes are coarse-grained: they
+  identify the organization and integration context rather than granting per-resource
+  read/write permissions. Endpoint-level authorization is enforced by Sprout user
+  permissions ("API Permissions") and by customer-account scoping in the URL path, not
+  by OAuth scope.
+
+schemes:
+- name: SproutOAuth2
+  issuer: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c
+  source: well-known/sprout-social-oauth-authorization-server.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/token
+  - flow: authorizationCode
+    authorizationUrl: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/authorize
+    tokenUrl: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/token
+    pkce: S256
+
+scopes:
+- scope: openid
+  description: >-
+    Standard OpenID Connect scope. Requests an ID token identifying the authenticated
+    Sprout user.
+  flows: [authorizationCode]
+  standard: true
+  sources: [well-known/sprout-social-oauth-authorization-server.json]
+- scope: profile
+  description: >-
+    Standard OpenID Connect scope. Releases profile claims such as given_name and
+    family_name.
+  flows: [authorizationCode]
+  standard: true
+  sources: [well-known/sprout-social-oauth-authorization-server.json]
+- scope: email
+  description: Standard OpenID Connect scope. Releases the email claim.
+  flows: [authorizationCode]
+  standard: true
+  sources: [well-known/sprout-social-oauth-authorization-server.json]
+- scope: organization_id
+  description: >-
+    Sprout-specific scope binding the token to a Sprout organization. This is the scope
+    used in the machine-to-machine token request published in the Sprout API
+    documentation.
+  flows: [clientCredentials, authorizationCode]
+  standard: false
+  documented_in_api_docs: true
+  sources: [well-known/sprout-social-oauth-authorization-server.json, https://api.sproutsocial.com/docs/]
+- scope: integration_id
+  description: >-
+    Sprout-specific scope binding the token to a registered integration. Surfaces as
+    the iid claim on issued tokens.
+  flows: [clientCredentials, authorizationCode]
+  standard: false
+  sources: [well-known/sprout-social-oauth-authorization-server.json]
+- scope: support
+  description: >-
+    Sprout-specific scope. Not documented in the public API reference; its grant
+    semantics are not published.
+  flows: [authorizationCode]
+  standard: false
+  sources: [well-known/sprout-social-oauth-authorization-server.json]
+
+summary:
+  scope_count: 6
+  standard_oidc_scopes: 3
+  provider_specific_scopes: 3
+  granularity: coarse
+  per_resource_scopes: false
+
+gaps:
+- No scopes/permissions reference page is published in the API documentation; only the
+  organization_id scope appears in a documented example request.
+- There are no read/write or per-endpoint scopes. An agent cannot request least
+  privilege at the OAuth layer — a token that can read analytics can also create
+  publishing posts, subject only to the Sprout user permissions behind it.
+- The `support` scope is advertised by the authorization server but is undocumented.

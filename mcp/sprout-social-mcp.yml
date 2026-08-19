@@ -1,0 +1,106 @@
+generated: '2026-08-13'
+method: searched
+status: none
+source: >-
+  https://api.sproutsocial.com/docs/, https://github.com/sproutsocial,
+  registry.npmjs.org search, web search for an official Sprout Social MCP server
+name: Sprout Social MCP posture
+description: >-
+  Sprout Social does not ship an MCP server. There is no hosted MCP endpoint, no
+  first-party stdio package, and no mention of MCP, agents or tools anywhere in the API
+  reference. The only Sprout-owned MCP artifact is a fork of the upstream Java MCP SDK
+  in its GitHub org — a contribution to the protocol's tooling, not a Sprout agent
+  surface. Every MCP server that speaks to the Sprout API is third-party and
+  self-declared unofficial.
+
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: searched
+
+server: null
+tools: []
+
+evidence:
+- check: API reference searched for "MCP", "agent", "tool"
+  url: https://api.sproutsocial.com/docs/
+  http_status: 200
+  result: no occurrences
+- check: GitHub organization repository listing (68 public repos)
+  url: https://api.github.com/orgs/sproutsocial/repos
+  http_status: 200
+  result: >-
+    No Sprout MCP server. One related repo — sproutsocial/java-mcp-sdk, described as
+    "Sprout Social Fork of the official Java SDK for Model Context Protocol servers and
+    clients. Maintained in collaboration with Spring AI." That is a fork of the protocol
+    SDK, not a server exposing Sprout's own API.
+- check: npm registry search for a first-party server
+  url: https://registry.npmjs.org/-/v1/search?text=sprout%20social
+  http_status: 200
+  result: >-
+    Four MCP packages found, none published under the @sproutsocial scope and none
+    first-party.
+- check: '/.well-known/oauth-protected-resource on the API host (MCP auth discovery)'
+  url: https://api.sproutsocial.com/.well-known/oauth-protected-resource
+  http_status: 404
+
+third_party_servers:
+  note: >-
+    Recorded so the absence is legible, NOT as a Sprout Social capability. These are
+    community projects wrapping the documented REST API with a customer's own API token.
+    None is endorsed, hosted or supported by Sprout Social.
+  servers:
+  - name: '@oliverames/sprout-mcp-server'
+    registry: npm
+    version: 1.3.2
+    published: '2026-08-12'
+    repository: https://github.com/oliverames/sprout-mcp-server
+    transport: stdio
+    official: false
+    claimed_tools: 28
+    claimed_coverage: analytics, publishing, listening, messages, case management
+  - name: '@jginorio/sprout-social-mcp'
+    registry: npm
+    version: 1.0.1
+    published: '2026-05-22'
+    transport: stdio
+    official: false
+    note: Self-described as an unofficial community MCP server.
+  - name: '@kodowjam/sprout-social-mcp'
+    registry: npm
+    version: 0.1.2
+    published: '2026-04-03'
+    transport: stdio
+    official: false
+  - name: sprout-social-mcp
+    registry: npm
+    version: 1.0.0
+    published: '2025-12-19'
+    repository: https://github.com/EbonyLouis/sprout-social-mcp
+    transport: stdio
+    official: false
+    scope: creating draft social posts only
+
+sprout_owned_mcp_repos:
+- name: sproutsocial/java-mcp-sdk
+  url: https://github.com/sproutsocial/java-mcp-sdk
+  kind: protocol-sdk-fork
+  description: >-
+    Sprout Social fork of the official Java SDK for Model Context Protocol servers and
+    clients, maintained in collaboration with Spring AI.
+  is_sprout_api_server: false
+
+note: >-
+  No candidate tool list is derived here. Sprout publishes no OpenAPI to ground
+  operationIds in, and inventing tool names against a hand-read endpoint table would
+  produce a manifest indistinguishable from a real one. The honest record is that the
+  documented REST surface — customer metadata, analytics, listening, messages,
+  publishing, media and cases — is what any future MCP server would wrap.
+
+no_pointer_reason: >-
+  Deliberately NOT wired as type MCPServer in apis.yml. Sprout Social serves no MCP
+  endpoint and ships no MCP package; a pointer would assert an agent surface that does
+  not exist.

@@ -1,0 +1,128 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sproutsocial.com/docs/
+name: Sprout Social API lifecycle
+description: >-
+  Versioning, deprecation practice, status and support posture for the Sprout Social
+  Public API, read from the provider's documentation, changelog and status page.
+
+versioning:
+  scheme: MAJOR.MINOR
+  in_url: major only
+  url_pattern: /<version>/<customer ID>/<endpoint path>
+  current: v1
+  also_referenced: v2
+  docs: https://api.sproutsocial.com/docs/
+  response_headers:
+  - X-Sprout-API-Version
+  - X-Sprout-Server-Version
+  semantics:
+    major: >-
+      A breaking change to the API, including updates to the syntax and semantics for
+      making requests and to the syntax and semantics of the response. Reflected in the
+      URL path.
+    minor: >-
+      A backwards-compatible change such as adding new metrics, new endpoints or metric
+      updates. Reflected in documentation and in the X-Sprout-API-Version response
+      header, but not in the URL.
+  note: >-
+    The changelog documents both v1 and v2 metadata endpoints
+    (v1/{customerId}/metadata/customer and v2/{customerId}/metadata/customer), so a v2
+    major version exists in production alongside v1. The public reference is written
+    against v1.
+
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  announced_via: https://api.sproutsocial.com/docs/changelog/
+  practice: >-
+    Sprout announces deprecations as dated changelog entries naming the exact removed
+    fields or metrics, and — where the cause is upstream — names the network that
+    deprecated them. It publishes no deprecation policy document, no advance-notice
+    window, and emits no Deprecation or Sunset response headers, so a deprecation is
+    only discoverable by reading the changelog.
+  recent_deprecations:
+  - date: '2026-06-15'
+    scope: Facebook profile and post metrics
+    cause: Deprecated upstream by Meta
+    examples:
+    - impressions_nonviral_unique
+    - impressions_paid_unique
+    - post_impressions
+    - lifetime.impressions_organic_unique
+    - lifetime.video_views_unique
+  - date: '2025-12-03'
+    scope: Facebook metric deprecations that occurred on 2025-11-15
+    cause: Deprecated upstream by Meta
+  - date: '2025-06-23'
+    scope: Facebook Groups references removed
+    cause: Facebook Groups deprecated upstream
+  - date: '2025-01-24'
+    scope: Instagram profile metrics
+    cause: Deprecated upstream by Meta
+    examples:
+    - email_contacts
+    - get_directions_clicks
+    - website_clicks
+    - profile_views_unique
+    - profile_actions
+  - date: '2024-09-16'
+    scope: Facebook owned-profile and post metrics
+    cause: Deprecated upstream by Meta
+    note: >-
+      Sprout explicitly warned that Tableau workbooks using these metrics would render
+      blank and would need editing.
+  deprecated_operations: []
+  deprecation_unit: metric or field, not operation
+
+status_page:
+  url: https://www.sproutsocialstatus.com
+  provider: Atlassian Statuspage
+  machine_readable: https://www.sproutsocialstatus.com/api/v2/status.json
+  probed_status: 200
+  note: >-
+    Statuspage exposes the standard v2 JSON API (status.json, summary.json,
+    components.json, incidents.json), so status is machine-readable for an agent.
+
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No public uptime SLA is published. Sprout's security page describes 24/7/365
+    monitoring and on-call engineering, but names no contractual availability target.
+    Enterprise agreements are negotiated privately.
+
+support:
+  help_center: https://support.sproutsocial.com/hc/en-us
+  note: >-
+    The help center answered HTTP 403 to an automated probe (Zendesk bot protection);
+    it is reachable in a browser.
+  api_support_route: >-
+    The API documentation directs persistent 500/503/504 conditions to "contact
+    support"; there is no separate developer support channel or public developer forum.
+
+terms:
+  api_terms_of_service: https://sproutsocial.com/legal/api-terms-of-service/
+  general_terms: https://sproutsocial.com/legal/terms/
+  note: >-
+    The API documentation states that by developing against or accessing these endpoints
+    you acknowledge agreement to the Sprout API terms. X (Twitter) data additionally
+    requires accepting the Sprout API X Content End User License Agreement in-app.
+
+access_lifecycle:
+  plan_gate: Advanced plan or higher
+  token_management: >-
+    Any user with the API Permissions permission can create API tokens, view existing
+    tokens, and invalidate them (preventing further client use) from
+    Settings > Global Features > API.
+  revocation: >-
+    Supported for both API tokens (in-app invalidation) and OAuth tokens (RFC 7009
+    revocation endpoint on the authorization server).
+  revocation_endpoint: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/revoke
+
+changelog:
+  url: https://api.sproutsocial.com/docs/changelog/
+  artifact: changelog/sprout-social-changelog.yml

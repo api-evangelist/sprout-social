@@ -1,0 +1,97 @@
+generated: '2026-08-13'
+method: probed
+source: live GET of /.well-known/* on every Sprout Social host in apis.yml plus the
+  authorization server named in the API docs
+name: Sprout Social well-known discovery surface
+description: >-
+  Sprout Social serves no /.well-known/ documents from its website root
+  (sproutsocial.com) or its API host root (api.sproutsocial.com) — every canonical
+  path 404s. The real discovery surface is the Okta-hosted authorization server that
+  api.sproutsocial.com/docs/ names by URL, which serves a complete RFC 8414 OAuth 2.0
+  Authorization Server Metadata document and an OpenID Connect discovery document.
+  Both were fetched anonymously and are saved verbatim here.
+
+hosts:
+- host: https://sproutsocial.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  note: >-
+    The marketing site is a Next.js app whose 404 template returns HTTP 404 with an
+    HTML body — no soft-200 false positives on this host.
+
+- host: https://api.sproutsocial.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  note: >-
+    The API gateway answers unknown paths with a JSON body
+    {"code":404,"message":"HTTP 404 Not Found"}. /openapi.json and /openapi.yaml
+    return 403 {"code":403,"message":"Access Denied"} rather than 404 — the gateway
+    denies the path, it does not serve a specification there.
+
+- host: https://identity.sproutsocial.com
+  note: >-
+    Sprout Social's authorization server is Okta-hosted and scoped to an authorization
+    server id. Root-level /.well-known/openid-configuration 404s; the documents live
+    under the /oauth2/<as-id>/ prefix, which is the exact URL published in the Sprout
+    API documentation under "Obtaining JSON Web Token (JWT) Access Token".
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    spec: RFC 8414 OAuth 2.0 Authorization Server Metadata
+    file: sprout-social-oauth-authorization-server.json
+  - path: /oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/.well-known/openid-configuration
+    status: 200
+    content_type: application/json
+    spec: OpenID Connect Discovery 1.0
+    file: sprout-social-openid-configuration.json
+
+summary:
+  documents_found: 2
+  security_txt: false
+  api_catalog: false
+  ai_plugin: false
+  agent_card: false
+  oauth_metadata: true
+  openid_configuration: true
+
+x-evidence:
+  fetched: '2026-08-13'
+  advertised_by: https://api.sproutsocial.com/docs/
+  urls:
+  - url: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/.well-known/oauth-authorization-server
+    http_status: 200
+  - url: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/.well-known/openid-configuration
+    http_status: 200
+  - url: https://sproutsocial.com/.well-known/security.txt
+    http_status: 404
+  - url: https://api.sproutsocial.com/.well-known/oauth-authorization-server
+    http_status: 404

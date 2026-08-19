@@ -1,6 +1,33 @@
+generated: '2026-08-13'
+method: searched
+source: https://sproutsocial.com/pricing/
+verified: '2026-08-13'
 name: Sprout Social Plans and Pricing
-description: Pricing plans for Sprout Social social media management platform. API access is available on the Advanced plan and above.
+description: >-
+  Pricing plans for the Sprout Social social media management platform, read from the
+  published pricing page. API access is gated to the Advanced plan and above — the
+  Advanced tier feature list names "The Sprout API and Helpdesk integrations" as the
+  differentiator over Professional. All seat prices are annual-billing rates; Essentials
+  additionally publishes a $99 per seat/month monthly-billing rate. A 30-day free trial
+  is offered with no credit card required.
 url: https://sproutsocial.com/pricing/
+plan_count: 5
+currency: USD
+api_gate:
+  minimum_plan: Advanced
+  price: 399
+  unit: seat/month
+  billing: annual
+add_ons:
+- name: Premium Analytics
+  price: null
+  note: Add-on; price not published, quoted through sales.
+- name: Listening
+  price: null
+  note: Add-on; price not published, quoted through sales.
+- name: Social Insights
+  price: null
+  note: Add-on; price not published, quoted through sales.
 plans:
   - name: Essentials
     price: 79

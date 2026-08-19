@@ -1,0 +1,144 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sproutsocial.com/docs/
+docs: https://api.sproutsocial.com/docs/
+name: Sprout Social API authentication profile
+description: >-
+  The Sprout Social Public API accepts two credential types on the same
+  Authorization bearer header: a long-lived account-scoped API token generated in the
+  Sprout web app, and a JWT access token issued by Sprout's Okta-hosted OAuth 2.0
+  authorization server. There is no OpenAPI document to derive from — this profile was
+  read from the provider's own documentation and from the live RFC 8414 authorization
+  server metadata saved in well-known/.
+
+summary:
+  types:
+  - http
+  - oauth2
+  - openIdConnect
+  http_schemes:
+  - bearer
+  bearer_format: JWT or opaque Sprout API token
+  api_key_in:
+  - header
+  oauth2_flows:
+  - authorizationCode
+  - clientCredentials
+  refresh_token_supported: true
+  pkce: true
+  mtls: false
+
+schemes:
+- name: SproutApiToken
+  type: http
+  scheme: bearer
+  in: header
+  parameter_name: Authorization
+  format: 'Authorization: Bearer <API token>'
+  description: >-
+    Account-scoped API token. Any Sprout user holding the "API Permissions" permission
+    can generate, view and invalidate tokens from Settings > Global Features > API >
+    API Token Management. Tokens are customer-account scoped, not user scoped.
+  issuance: Sprout web application (Settings > Global Features > API)
+  source: https://api.sproutsocial.com/docs/
+
+- name: SproutOAuth2ClientCredentials
+  type: oauth2
+  flow: clientCredentials
+  token_url: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/token
+  token_endpoint_auth_methods:
+  - client_secret_basic
+  - client_secret_post
+  description: >-
+    Machine-to-machine authentication. Clients are provisioned under OAuth Client
+    Management in the Sprout app ("Generate configuration" > Machine-to-machine
+    authentication), which returns a client_id and client_secret. The published example
+    requests scope=organization_id.
+  documented_request: >-
+    POST /v1/token with Content-Type: application/x-www-form-urlencoded and
+    client_id, client_secret, grant_type=client_credentials, scope=organization_id
+  source: https://api.sproutsocial.com/docs/
+
+- name: SproutOAuth2AuthorizationCode
+  type: oauth2
+  flow: authorizationCode
+  authorization_url: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/authorize
+  token_url: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/token
+  refresh_supported: true
+  pkce_methods:
+  - S256
+  description: >-
+    User-based authentication. The OAuth client configuration requires a list of allowed
+    redirect URIs, and the integrating application requires users to log in with Sprout.
+  source: well-known/sprout-social-oauth-authorization-server.json
+
+- name: SproutOpenIDConnect
+  type: openIdConnect
+  issuer: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c
+  openid_configuration_url: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/.well-known/openid-configuration
+  userinfo_endpoint: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/userinfo
+  jwks_uri: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/jwks
+  id_token_signing_alg_values:
+  - RS256
+  - ES512
+  claims:
+  - sub
+  - aud
+  - email
+  - exp
+  - family_name
+  - given_name
+  - iat
+  - iss
+  - sid
+  - client_id
+  - oid
+  - iid
+  - actor
+  source: well-known/sprout-social-openid-configuration.json
+
+authorization_server:
+  issuer: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c
+  metadata_url: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/.well-known/oauth-authorization-server
+  grant_types_supported:
+  - authorization_code
+  - refresh_token
+  - client_credentials
+  response_types_supported:
+  - code
+  response_modes_supported:
+  - query
+  - form_post
+  code_challenge_methods_supported:
+  - S256
+  introspection_endpoint: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/introspect
+  revocation_endpoint: https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c/v1/revoke
+  file: well-known/sprout-social-oauth-authorization-server.json
+
+access_requirements:
+  plan: Advanced or higher (or Enterprise)
+  plan_source: https://sproutsocial.com/pricing/
+  additional_agreement: >-
+    Access to X (Twitter) data through the Sprout API additionally requires a Sprout
+    user with the API Permissions permission to accept the Sprout API X Content End
+    User License Agreement, presented at the top of the API page under Global Features
+    in Settings.
+  terms: https://sproutsocial.com/legal/api-terms-of-service/
+
+request_headers:
+- header: Authorization
+  value: Bearer <OAuth access token OR API token>
+  required: true
+- header: Accept
+  value: application/json
+  required: true
+- header: Content-Type
+  value: application/json
+  required: true
+
+notes:
+- The Authorization header accepts both account-scoped API tokens and OAuth access
+  tokens interchangeably; the API does not distinguish them at the header level.
+- No mutual TLS, no request signing, and no HTTP Basic authentication is documented
+  for the data API itself. Basic auth appears only as a token-endpoint client
+  authentication method on the authorization server.

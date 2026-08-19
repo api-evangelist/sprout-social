@@ -1,0 +1,200 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://api.sproutsocial.com/docs/ plus the live authorization server metadata at
+  well-known/sprout-social-oauth-authorization-server.json and the trust center at
+  https://trust.sproutsocial.com/
+name: Sprout Social standards conformance
+description: >-
+  Which cross-cutting standards the Sprout Social Public API and its identity layer
+  actually conform to. The identity layer is standards-dense — a full RFC 8414
+  authorization server with OIDC discovery, PKCE, introspection and revocation. The data
+  API itself is not: no OpenAPI, no RFC 9457 errors, no RFC 8594 deprecation signalling,
+  no RFC 9116 security.txt, and no standard rate-limit headers.
+
+standards:
+- id: oauth2
+  name: OAuth 2.0 (RFC 6749)
+  conforms: true
+  evidence: >-
+    Authorization code and client credentials grants with refresh tokens, issued by
+    https://identity.sproutsocial.com/oauth2/84e39c75-d770-45d9-90a9-7b79e3037d2c
+
+- id: rfc8414-oauth-authorization-server-metadata
+  name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+  conforms: true
+  evidence: >-
+    /.well-known/oauth-authorization-server returns HTTP 200 with a complete metadata
+    document (issuer, authorization_endpoint, token_endpoint, jwks_uri,
+    scopes_supported, grant_types_supported)
+
+- id: oidc-discovery
+  name: OpenID Connect Discovery 1.0
+  conforms: true
+  evidence: >-
+    /.well-known/openid-configuration returns HTTP 200 with userinfo_endpoint,
+    id_token_signing_alg_values_supported and claims_supported
+
+- id: oidc
+  name: OpenID Connect Core 1.0
+  conforms: true
+  evidence: >-
+    openid/profile/email scopes advertised; ID tokens signed RS256/ES512; subject_types
+    public; userinfo endpoint published
+
+- id: rfc7636-pkce
+  name: Proof Key for Code Exchange (RFC 7636)
+  conforms: true
+  evidence: code_challenge_methods_supported = [S256]
+
+- id: rfc7662-token-introspection
+  name: OAuth 2.0 Token Introspection (RFC 7662)
+  conforms: true
+  evidence: >-
+    introspection_endpoint published with client_secret_basic and client_secret_post
+    auth methods
+
+- id: rfc7009-token-revocation
+  name: OAuth 2.0 Token Revocation (RFC 7009)
+  conforms: true
+  evidence: revocation_endpoint published
+
+- id: rfc7519-jwt
+  name: JSON Web Token (RFC 7519)
+  conforms: true
+  evidence: >-
+    Documentation describes obtaining a JSON Web Token (JWT) access token; jwks_uri
+    published for verification
+
+- id: rfc6750-bearer-token
+  name: OAuth 2.0 Bearer Token Usage (RFC 6750)
+  conforms: true
+  evidence: 'Authorization: Bearer <token> is the documented request header'
+
+- id: openapi
+  name: OpenAPI Specification
+  conforms: false
+  evidence: >-
+    No OpenAPI or Swagger document is published. /openapi.json and /openapi.yaml on
+    api.sproutsocial.com return HTTP 403 Access Denied; /swagger.json, /v1/openapi.json,
+    /api-docs and /redoc return HTTP 404. The reference is a Gatsby-rendered HTML page.
+
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  not_applicable: true
+  evidence: >-
+    The API exposes no event, streaming or webhook surface — the word "webhook" does not
+    appear in the reference. Nothing to describe with AsyncAPI.
+
+- id: graphql
+  name: GraphQL
+  conforms: false
+  evidence: >-
+    Sprout Social publishes no GraphQL endpoint. The API is JSON over HTTP with POST
+    used for query-shaped reads.
+
+- id: rfc9457-problem-details
+  name: Problem Details for HTTP APIs (RFC 9457)
+  conforms: false
+  evidence: >-
+    Errors are returned as a free-text string on an `error` key of the standard response
+    envelope. No application/problem+json media type, no type URI, no error code.
+
+- id: rfc8594-sunset-header
+  name: The Sunset HTTP Header Field (RFC 8594)
+  conforms: false
+  evidence: >-
+    No Sunset or Deprecation response headers are documented. Deprecations are announced
+    only as dated changelog entries.
+
+- id: rfc9116-security-txt
+  name: A File Format to Aid in Security Vulnerability Disclosure (RFC 9116)
+  conforms: false
+  evidence: >-
+    /.well-known/security.txt returns HTTP 404 on sproutsocial.com and
+    api.sproutsocial.com, even though a Bugcrowd VDP and a Responsible Disclosure Policy
+    exist.
+
+- id: ratelimit-headers
+  name: RateLimit header fields for HTTP (draft-ietf-httpapi-ratelimit-headers)
+  conforms: false
+  evidence: >-
+    Limits are published in prose (60/minute, 250,000/month) but no RateLimit-*,
+    X-RateLimit-* or Retry-After headers are documented. The only documented response
+    headers are X-Sprout-Request-ID, X-Sprout-API-Version and X-Sprout-Server-Version.
+
+- id: idempotency-key
+  name: Idempotency-Key header (draft-ietf-httpapi-idempotency-key-header)
+  conforms: false
+  evidence: >-
+    No idempotency key, de-duplication window or idempotent-retry contract is documented,
+    including on the publishing-post create operation.
+
+- id: semver
+  name: Semantic versioning
+  conforms: partial
+  evidence: >-
+    MAJOR.MINOR only (no patch). Major = breaking, minor = backwards compatible, which
+    matches semver semantics; only the major appears in the URL.
+
+- id: json-api
+  name: JSON:API
+  conforms: false
+  evidence: >-
+    Custom envelope of data/paging/error; no JSON:API media type, resource identifier
+    objects or relationship documents.
+
+- id: mcp
+  name: Model Context Protocol
+  conforms: false
+  evidence: >-
+    Sprout Social ships no MCP server. Its GitHub org carries a fork of the official
+    Java MCP SDK (sproutsocial/java-mcp-sdk) but publishes no Sprout MCP endpoint or
+    package. See mcp/sprout-social-mcp.yml.
+
+- id: a2a
+  name: A2A Agent Card
+  conforms: false
+  evidence: >-
+    /.well-known/agent-card.json and /.well-known/agent.json return HTTP 404 on
+    sproutsocial.com, api.sproutsocial.com and identity.sproutsocial.com.
+
+- id: llms-txt
+  name: llms.txt
+  conforms: true
+  evidence: >-
+    https://sproutsocial.com/llms.txt returns HTTP 200 with a valid llms.txt document.
+    Note it indexes marketing and research content, not the API reference.
+
+compliance:
+  published: true
+  trust_center: https://trust.sproutsocial.com/
+  certifications:
+  - SOC 2
+  - ISO 27001
+  - ISO 27017
+  - ISO 27018
+  - HIPAA
+  - FedRAMP
+  - GDPR
+  certifications_source: security/sprout-social-trust-center.yml
+  certifications_probed: '2026-08-13'
+  also_referenced_on_page:
+  - PCI
+  - CCPA
+  security_program: https://sproutsocial.com/security/
+  detail: security/sprout-social-trust-center.yml
+  note: >-
+    The certification list mirrors the 2026-08-13 re-probe of trust.sproutsocial.com and
+    supersedes the 2026-07-11 capture, which additionally recorded PCI DSS and CSA STAR.
+    The trust center is a client-rendered application, so treat
+    security/sprout-social-trust-center.yml as the single source of truth rather than
+    duplicating the list downstream.
+
+summary:
+  conforms_count: 11
+  fails_count: 9
+  not_applicable_count: 1
+  identity_layer: standards-conformant
+  data_api_layer: proprietary

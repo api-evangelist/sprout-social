@@ -1,0 +1,327 @@
+generated: '2026-08-13'
+method: searched
+source: https://api.sproutsocial.com/docs/
+name: Sprout Social API data model
+description: >-
+  Entity-relationship graph for the Sprout Social Public API, read from the object and
+  field tables in the provider's documentation. Sprout publishes no OpenAPI, so this was
+  not derived from schema $ref links — every entity, field and relationship below is
+  transcribed from the documented request and response bodies at
+  api.sproutsocial.com/docs/.
+
+root:
+  entity: Customer
+  note: >-
+    Every entity in the model hangs off a customer. The customer ID is the second path
+    segment of every endpoint except GET /v1/metadata/client, which is the only
+    unscoped call and therefore the mandatory first request of any integration.
+
+entities:
+- name: Customer
+  description: >-
+    A Sprout Social customer account. Identified by customer_id; obtained from
+    GET /v1/metadata/client.
+  id_field: customer_id
+  source_operation: GET /v1/metadata/client
+  fields:
+  - customer_id
+  - name
+
+- name: CustomerProfile
+  description: >-
+    A connected social network profile. The central join entity — analytics, messages,
+    listening and publishing all filter on customer_profile_id.
+  id_field: customer_profile_id
+  source_operation: GET /v1/<customer ID>/metadata/customer
+  fields:
+  - name: customer_profile_id
+    description: Sprout's ID for this social network profile.
+  - name: network_type
+    description: Social network type (twitter, facebook, instagram, google_my_business, …).
+  - name: name
+    description: Human-facing name of the profile.
+  - name: native_name
+    description: Username, screen name or page URL the network uses for the profile.
+  - name: native_id
+    description: The network's own ID for the profile.
+  - name: groups
+    description: Array of group IDs this profile belongs to.
+  - name: network_metadata
+    description: >-
+      Optional network-specific metadata. address for Google My Business, Yelp and
+      Tripadvisor; store_code for Google My Business and Facebook locations. Added
+      2026-01-13.
+
+- name: Group
+  description: >-
+    A grouping of profiles used for team collaboration and reporting. Constrains
+    publishing — multiple profiles on one post must live in the same group.
+  id_field: group_id
+  source_operation: GET /v1/<customer ID>/metadata/customer/groups
+
+- name: Tag
+  description: >-
+    A message tag created in Sprout. Returned complete and unpaginated, including
+    archived tags; deleted tags are permanently removed and never returned.
+  id_field: tag_id
+  source_operation: GET /v1/<customer ID>/metadata/customer/tags
+  fields:
+  - name: tag_id
+  - name: text
+    description: The tag text.
+  - name: active
+    description: Whether the tag is active or archived.
+  - name: any_group
+    description: Whether the tag is available in any customer group.
+
+- name: User
+  description: A Sprout user in the customer account.
+  source_operation: GET /v1/<customer ID>/metadata/customer/users
+  fields:
+  - email
+  note: The email field was added 2025-07-23.
+
+- name: Team
+  description: A team within the customer account.
+  source_operation: GET /v1/<customer ID>/metadata/customer/teams
+
+- name: CaseQueue
+  description: >-
+    A social care case queue. Documented example carries id, name, description and
+    associated_teams.
+  source_operation: GET /v1/<customer ID>/metadata/customer/queues
+  fields:
+  - id
+  - name
+  - description
+  - associated_teams
+
+- name: Topic
+  description: A Listening topic that monitors keywords, mentions or accounts.
+  id_field: topic_id
+  source_operation: GET /v1/<customer ID>/metadata/customer/topics
+
+- name: ProfileAnalytics
+  description: >-
+    Owned profile activity broken down by day. Queried by customer_profile_id and
+    reporting_period, returning a caller-selected metrics array.
+  source_operation: POST /v1/<customer ID>/analytics/profiles
+  keyed_by: customer_profile_id + reporting_period
+
+- name: PostAnalytics
+  description: >-
+    Post content, metadata and lifetime activity metrics. Queried by
+    customer_profile_id and created_time; returns only the guid field unless fields is
+    specified.
+  id_field: guid
+  source_operation: POST /v1/<customer ID>/analytics/posts
+
+- name: Message
+  description: >-
+    An inbox message across any connected network. The richest entity in the model —
+    the Message Fields table carries author, content, sentiment, tags, case linkage and
+    the publishing post that produced it.
+  id_field: guid
+  source_operation: POST /v1/<customer ID>/messages
+  fields:
+  - name: guid
+  - name: from.guid
+    description: Author identifier; usable as a filter (added 2025-11-26).
+  - name: language_code
+    description: Added 2025-07-23.
+  - name: case_id
+    description: >-
+      Links a message to a social care case. Present for most message types
+      (added 2025-02-19).
+  - name: publishing_post_id
+    description: >-
+      For sent messages published through the Sprout publishing workflow, the
+      originating Publishing Calendar post ID (added 2026-04-15).
+  - name: is_boosted
+    description: Added 2025-07-14.
+
+- name: PublishingPost
+  description: >-
+    A post created in Sprout for future publication. Only draft creation is supported.
+    Creation fans out to one calendar post per profile per scheduled time.
+  id_field: publishing_post_id
+  source_operations:
+  - POST /v1/<customer ID>/publishing/posts
+  - GET /v1/<customer ID>/publishing/posts/<publishing_post_id>
+  fields:
+  - name: group_id
+    required: true
+  - name: customer_profile_ids
+    required: true
+    description: >-
+      Target profiles. All profiles on a post must exist within the same group.
+  - name: is_draft
+    required: true
+    description: Must be true — only draft creation is supported.
+  - name: text
+  - name: media
+    description: Ordered array of {media_id, media_type} objects.
+  - name: delivery.scheduled_times
+    description: >-
+      Array of ISO 8601 UTC timestamps. Must be in the future; seconds are rounded down
+      to the nearest minute.
+  - name: delivery.type
+    description: Only SCHEDULED is supported.
+  - name: tag_ids
+  - name: delivery_status
+    description: >-
+      Always returns PENDING on retrieval, even for posts already published. To read a
+      published post, use the Messages endpoint instead.
+
+- name: Media
+  description: >-
+    An uploaded media asset. Single-request upload under 50MB, or a multipart
+    submission flow for larger files.
+  id_field: media_id
+  media_types:
+  - PHOTO
+  - VIDEO
+  - DOCUMENT
+  source_operations:
+  - POST /v1/<customer ID>/media/
+  - POST /v1/<customer ID>/media/submission
+  - POST /v1/<customer ID>/media/submission/<submission_id>/part/<part_number>
+  - GET /v1/<customer ID>/media/submission/<submission_id>
+
+- name: MediaSubmission
+  description: A multipart upload session assembling parts into a Media asset.
+  id_field: submission_id
+
+- name: Case
+  description: A social care case. Retrieved by filter query.
+  id_field: case_id
+  source_operation: POST /v1/<customer ID>/cases/filter
+
+- name: TopicMessage
+  description: A message surfaced by a Listening topic.
+  source_operation: POST /v1/<customer ID>/listening/topics/<topic id>/messages
+
+- name: TopicMetrics
+  description: >-
+    Dimensioned metrics for a Listening topic (for example sentiment dimensions with
+    replies, shares_count and likes). Returned unpaginated.
+  source_operation: POST /v1/<customer ID>/listening/topics/<topic id>/metrics
+
+relationships:
+- from: Customer
+  to: CustomerProfile
+  type: has_many
+  via: customer_id (path)
+- from: Customer
+  to: Group
+  type: has_many
+  via: customer_id (path)
+- from: Customer
+  to: Tag
+  type: has_many
+  via: customer_id (path)
+- from: Customer
+  to: User
+  type: has_many
+  via: customer_id (path)
+- from: Customer
+  to: Team
+  type: has_many
+  via: customer_id (path)
+- from: Customer
+  to: CaseQueue
+  type: has_many
+  via: customer_id (path)
+- from: Customer
+  to: Topic
+  type: has_many
+  via: customer_id (path)
+- from: CustomerProfile
+  to: Group
+  type: has_many
+  via: groups
+- from: Group
+  to: CustomerProfile
+  type: has_many
+  via: customer_profile_ids
+- from: CustomerProfile
+  to: ProfileAnalytics
+  type: has_many
+  via: filters customer_profile_id.eq(...)
+- from: CustomerProfile
+  to: PostAnalytics
+  type: has_many
+  via: filters customer_profile_id.eq(...)
+- from: CustomerProfile
+  to: Message
+  type: has_many
+  via: customer_profile_id
+- from: PublishingPost
+  to: Group
+  type: belongs_to
+  via: group_id
+- from: PublishingPost
+  to: CustomerProfile
+  type: has_many
+  via: customer_profile_ids
+- from: PublishingPost
+  to: Media
+  type: has_many
+  via: media[].media_id
+- from: PublishingPost
+  to: Tag
+  type: has_many
+  via: tag_ids
+- from: Message
+  to: PublishingPost
+  type: belongs_to
+  via: publishing_post_id
+- from: Message
+  to: Case
+  type: belongs_to
+  via: case_id
+- from: Case
+  to: CaseQueue
+  type: belongs_to
+  via: queue
+- from: CaseQueue
+  to: Team
+  type: has_many
+  via: associated_teams
+- from: MediaSubmission
+  to: Media
+  type: has_one
+  via: submission_id
+- from: Topic
+  to: TopicMessage
+  type: has_many
+  via: topic_id (path)
+- from: Topic
+  to: TopicMetrics
+  type: has_many
+  via: topic_id (path)
+
+summary:
+  entity_count: 17
+  relationship_count: 24
+  root_entity: Customer
+  join_entity: CustomerProfile
+  derived_from_openapi: false
+
+modeling_notes:
+- >-
+  Identifiers are unprefixed integers or opaque strings — customer_profile_id 492,
+  tag_id 321, media_id "1234-abcd-7890", guid "101". There is no type-prefixed ID
+  convention, so an ID alone does not identify its entity.
+- >-
+  guid is reused as the identifier for both PostAnalytics and Message. It is also the
+  documented cursor field for paging past the 10,000-result ceiling.
+- >-
+  The PublishingPost create response does not mirror the request: one create fans out to
+  one calendar post per profile per scheduled time, and the response represents the
+  future network posts rather than the calendar entry. Two profiles by two send times
+  returns four objects.
+- >-
+  Publishing silently drops profiles whose media type is unsupported — no error is
+  returned. A caller must diff the requested customer_profile_ids against the response
+  to detect it.

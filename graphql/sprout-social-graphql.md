@@ -1,5 +1,13 @@
 # Sprout Social GraphQL Schema
 
+> **Provenance warning (2026-08-13).** Sprout Social does **not** publish a GraphQL API.
+> This schema was authored by API Evangelist as a conceptual model of the REST surface;
+> it is not a provider artifact and no Sprout endpoint accepts these queries. The
+> `type: GraphQL` pointer was removed from `apis.yml` on 2026-08-13 because it asserted a
+> GraphQL API that Sprout does not ship. The authoritative, provider-grounded entity model
+> now lives in `data-model/sprout-social-data-model.yml`, transcribed field-by-field from
+> https://api.sproutsocial.com/docs/.
+
 ## Overview
 
 This GraphQL schema is a conceptual representation of the Sprout Social REST API surface, modeling the core entities, relationships, and operations available through the [Sprout Social Public API](https://api.sproutsocial.com/docs/). Sprout Social is a social media management platform that enables publishing, monitoring, analytics, messaging, and listening across major social networks including Instagram, Facebook, LinkedIn, TikTok, YouTube, and X.
