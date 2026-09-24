@@ -33,7 +33,7 @@ created: '2026-06-13'
 modified: '2026-08-13'
 specificationVersion: '0.23'
 tags:
-- Social-Media
+- Social Media
 - Social Media Management
 - Publishing
 - Analytics
@@ -48,6 +48,7 @@ tags_raw:
 - Reporting
 - Messaging
 - Listening
+- Social-Media
 apis:
 - aid: sprout-social:sprout-social-api
   name: Sprout Social API
@@ -58,7 +59,7 @@ apis:
   humanURL: https://api.sproutsocial.com/docs/
   baseURL: https://api.sproutsocial.com
   tags:
-  - Social-Media
+  - Social Media
   - Publishing
   - Analytics
   - Messaging
@@ -69,6 +70,7 @@ apis:
   - Analytics
   - Messaging
   - Listening
+  - Social-Media
   properties:
   - type: Documentation
     url: https://api.sproutsocial.com/docs/
