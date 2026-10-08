@@ -96,3 +96,46 @@ plans:
       - Priority customer support
       - Custom contract terms
     api_access: true
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - negotiated
+  - subscription
+  units: []
+  plans:
+  - name: Essentials
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Standard
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Professional
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Advanced
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods: []
+  - name: Enterprise
+    access: other
+    model: negotiated
+    model_how: derived
+    units:
+    - other
+    periods: []
