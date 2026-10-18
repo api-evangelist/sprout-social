@@ -65,7 +65,7 @@
     - connectors/applications/sprout-social
     vendor_link: https://sproutsocial.com/
     builder: Fivetran
-  status: pending-partner-spec
+  status: not-a-workflow
   arazzo: null
 - slug: sprout-social-meltano
   label: Meltano
@@ -94,7 +94,7 @@
     quality:
     - silver
     builder: 'community (Meltano Hub variant maintainers: ella6882)'
-  status: pending-partner-spec
+  status: not-a-workflow
   arazzo: null
 - slug: sprout-social-microsoft-teams-own
   label: Microsoft Teams (own)
